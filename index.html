@@ -1,12 +1,444 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Corretor</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correções</title>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: sans-serif; line-height: 1.5; overflow: hidden; display: flex; }
+
+  #sidebar { width: 320px; flex: none; height: 100vh; overflow-y: auto; border-right: 1px solid #ccc;
+             background: #f6f6f6; padding: .75rem; transition: margin-left .2s; }
+  body.colapsada #sidebar { margin-left: -320px; }
+  #sidebar h1 { font-size: 1.1rem; margin: 0 0 .75rem; }
+
+  details { margin-bottom: .5rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+  summary { cursor: pointer; padding: .5rem .6rem; font-weight: bold; }
+  details ul { list-style: none; margin: 0; padding: 0 0 .4rem; }
+  details li a { display: block; padding: .25rem .8rem; color: #222; text-decoration: none; font-size: .9rem; }
+  details li a:hover { background: #eee; }
+  details li a { display: flex; flex-direction: column; gap: .05rem; }
+  details li a .linha1 { display: flex; align-items: baseline; gap: .45rem; }
+  details li a .num { color: #222; font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
+  details li a .nome { font-weight: 600; overflow-wrap: anywhere; }
+  details li a .tag { margin-left: auto; flex: none; font-size: .65rem; font-weight: bold; padding: 0 .35rem; border-radius: 3px; background: #e3e3e3; color: #555; }
+  details li a .tag.CC { background: #d8e6ff; color: #1f4a9a; } details li a .tag.CS { background: #ffe9c7; color: #8a5a00; }
+  details li a .tema { color: #777; font-size: .75rem; }
+  details li a.ativo { background: #dde8ff; font-weight: bold; }
+
+  #area { flex: 1; min-width: 0; height: 100vh; display: flex; flex-direction: column; }
+  #toggle { flex: none; align-self: flex-start; margin: .5rem; padding: .3rem .7rem; cursor: pointer; }
+  #rolagem { flex: 1; overflow-y: auto; }
+  #conteudo { padding: 0 1.5rem 2rem; max-width: 1000px; margin: 0 auto; }
+  table.notas { margin: .5rem 0 1rem; } table.notas th, table.notas td { text-align: center; }
+  details li.conferida a .linha1::after { content: "✓"; color: #2a8a2a; font-weight: bold; flex: none; }
+  #modal { position: fixed; inset: 0; background: rgba(20,24,40,.5); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 10; }
+  #modal.aberto { display: flex; }
+  #modal .caixa { background: #fff; border-radius: 12px; width: min(600px, 92vw); max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,.35); overflow: hidden; }
+  #modal .cab { padding: 1rem 1.3rem .8rem; border-bottom: 1px solid #e6e6ee; display: flex; align-items: center; gap: .6rem; }
+  #modal h2 { margin: 0; font-size: 1.15rem; }
+  #modal .contagem { background: #e8eeff; color: #1f4a9a; font-weight: 700; font-size: .8rem; border-radius: 999px; padding: .05rem .6rem; }
+  #modal .lista { overflow-y: auto; padding: .4rem .8rem .8rem; }
+  #modal h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; margin: .9rem .5rem .3rem; color: #667; }
+  #modal .lista a { display: flex; align-items: baseline; gap: .55rem; padding: .45rem .6rem; color: #222; text-decoration: none; border-radius: 6px; font-size: .92rem; }
+  #modal .lista a:hover { background: #eef3ff; }
+  #modal .lista .num { font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
+  #modal .lista .nome { font-weight: 600; }
+  #modal .lista .tema { color: #777; font-size: .8rem; margin-left: auto; text-align: right; }
+  #modal .vazio { text-align: center; color: #667; padding: 2rem 1rem; }
+  #modal .rodape { padding: .75rem 1.3rem; border-top: 1px solid #e6e6ee; display: flex; justify-content: space-between; gap: .5rem; background: #fafafd; }
+  #modal button { padding: .4rem 1rem; cursor: pointer; border-radius: 6px; border: 1px solid #bbc; background: #fff; font-size: .88rem; }
+  #modal button:hover { background: #eef3ff; }
+  #modal button.primario { background: #2f5fd0; border-color: #2f5fd0; color: #fff; }
+  #modal button.primario:hover { background: #244bab; }
+  #modal button:disabled { opacity: .45; cursor: default; }
+  table { border-collapse: collapse; } td, th { border: 1px solid #aaa; padding: 4px 8px; }
+  #conteudo { padding-bottom: 85vh; }
+  #topo { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .5rem .75rem; border-bottom: 1px solid #ddd; background: #fafafd; }
+  #toggle, #pendentes { margin: 0; align-self: auto; padding: .35rem .8rem; border: 1px solid #bbc; background: #fff; border-radius: 6px; font-size: .88rem; cursor: pointer; }
+  #toggle:hover, #pendentes:hover { background: #eef3ff; }
+  #pendentes .badge { display: inline-block; margin-left: .35rem; min-width: 1.3rem; padding: 0 .4rem; border-radius: 999px; background: #d64545; color: #fff; font-size: .72rem; font-weight: 700; text-align: center; }
+  #pendentes .badge.zero { background: #2a8a2a; }
+  #pills { display: inline-flex; gap: .35rem; margin-left: .5rem; padding-left: .85rem; border-left: 1px solid #ccd; }
+  #pills:empty { display: none; }
+  #pills button { border: 1px solid #99a; background: #f0f2ff; border-radius: 999px; padding: .15rem .75rem; font-size: .8rem; font-weight: 600; color: #334; cursor: pointer; }
+  #pills button:hover { background: #dde8ff; }
+  #pills button.topo { background: #334; border-color: #334; color: #fff; }
+  #pills button.topo:hover { background: #556; }
+  #conteudo mark.c4 { cursor: help; background: #ffc4de; color: inherit; border-radius: 2px; border-bottom: 2px solid #e0559a; }
+  #conteudo strong[data-corr] { cursor: help; background: #fff1b8; border-radius: 2px; }
+  #balao { position: fixed; z-index: 20; display: none; max-width: 340px; background: #222; color: #fff; padding: .4rem .6rem;
+           border-radius: 6px; font-size: .85rem; line-height: 1.35; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+  #balao small { display: block; color: #bbb; margin-bottom: .15rem; }
+</style>
 </head>
 <body>
-<h1>Meu Corretor de Redações</h1>
-<p>Em breve.</p>
+<aside id="sidebar">
+  <h1>Correções</h1>
+  <details open><summary>Correções</summary><ul id="lista-correcoes"></ul></details>
+  <details><summary>Correções simplificadas</summary><ul id="lista-simplificadas"></ul></details>
+</aside>
+<div id="area">
+  <div id="topo"><button id="toggle" title="Mostrar/ocultar menu">☰ Menu</button>
+  <button id="pendentes" title="Redações ainda não conferidas">Pendentes<span class="badge" id="badge"></span></button>
+  <span id="pills"></span></div>
+  <div id="rolagem"><main id="conteudo"><em>Selecione um arquivo.</em></main></div>
+</div>
+
+<div id="balao"></div>
+<div id="modal"><div class="caixa">
+  <div class="cab"><h2>Redações não conferidas</h2><span class="contagem" id="modal-contagem"></span></div>
+  <div class="lista" id="modal-lista"></div>
+  <div class="rodape">
+    <button id="marcar-todas" class="primario">✓ Marcar todas como lidas</button>
+    <button id="modal-fechar">Fechar</button>
+  </div>
+</div></div>
+
+<script>
+// Requer servidor local: python3 -m http.server  (abrir http://localhost:8000/)
+const pastas = [
+  ["CC", "Correções completas (CC)", "lista-correcoes"],
+  ["CS", "Correções simplificadas (CS)", "lista-simplificadas"],
+];
+
+const CHAVE = "conferidas";
+function lerConferidas() {
+  try { return new Set(JSON.parse(localStorage.getItem(CHAVE) || "[]")); } catch { return new Set(); }
+}
+function salvarConferidas(set) {
+  try { localStorage.setItem(CHAVE, JSON.stringify([...set])); } catch {}
+}
+
+const modal = document.getElementById("modal");
+const fecharModal = () => modal.classList.remove("aberto");
+document.getElementById("modal-fechar").onclick = fecharModal;
+modal.onclick = e => { if (e.target === modal) fecharModal(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModal(); });
+document.getElementById("pendentes").onclick = () => abrirPendentes(true);
+
+function todasLinks() { return [...document.querySelectorAll("#sidebar li a")]; }
+
+function atualizarBadge() {
+  const conf = lerConferidas();
+  const n = todasLinks().filter(a => !conf.has(a.dataset.caminho)).length;
+  const b = document.getElementById("badge");
+  b.textContent = n || "✓";
+  b.classList.toggle("zero", !n);
+}
+
+function marcarTodas() {
+  const conf = lerConferidas();
+  for (const a of todasLinks()) { conf.add(a.dataset.caminho); a.parentElement.classList.add("conferida"); }
+  salvarConferidas(conf);
+  atualizarBadge();
+  abrirPendentes(true);
+}
+document.getElementById("marcar-todas").onclick = marcarTodas;
+
+function abrirPendentes(forcar) {
+  const conf = lerConferidas();
+  const alvo = document.getElementById("modal-lista");
+  alvo.innerHTML = "";
+  let total = 0;
+  for (const [label, titulo, idUl] of pastas) {
+    const itens = [...document.querySelectorAll("#" + idUl + " a")].filter(a => !conf.has(a.dataset.caminho));
+    if (!itens.length) continue;
+    total += itens.length;
+    const h = document.createElement("h3");
+    h.textContent = titulo;
+    alvo.appendChild(h);
+    for (const a of itens) {
+      const l = document.createElement("a");
+      l.href = a.href;
+      for (const cls of ["num", "nome", "tema"]) {
+        const o = a.querySelector("." + cls);
+        if (o) { const e = document.createElement("span"); e.className = cls; e.textContent = o.textContent; l.appendChild(e); }
+      }
+      if (!l.children.length) l.textContent = a.textContent;
+      l.onclick = e => { e.preventDefault(); fecharModal(); mostrar(a.dataset.caminho); };
+      alvo.appendChild(l);
+    }
+  }
+  document.getElementById("modal-contagem").textContent = total;
+  document.getElementById("modal-contagem").style.display = total ? "" : "none";
+  document.getElementById("marcar-todas").disabled = !total;
+  if (!total) {
+    if (!forcar) return;
+    alvo.innerHTML = '<div class="vazio">🎉 Todas as redações foram conferidas.</div>';
+  }
+  modal.classList.add("aberto");
+}
+
+document.getElementById("toggle").onclick = () => document.body.classList.toggle("colapsada");
+
+function marcarAtivo(caminho) {
+  document.querySelectorAll("#sidebar a").forEach(a => {
+    const ativo = a.dataset.caminho === caminho;
+    a.classList.toggle("ativo", ativo);
+    if (ativo) a.closest("details").open = true;
+  });
+}
+
+// Transpõe a tabela "Competência | Nota" para horizontal, logo abaixo do Status.
+function notasHorizontais(c) {
+  const orig = [...c.querySelectorAll("table")].find(t => {
+    const h = [...t.querySelectorAll("th")].map(x => x.textContent.trim());
+    return h.length === 2 && /^compet/i.test(h[0]) && /^nota/i.test(h[1]);
+  });
+  if (!orig) return;
+  const linhas = [...orig.querySelectorAll("tbody tr")].map(tr => [...tr.cells]);
+  const t = document.createElement("table");
+  t.className = "notas";
+  const cab = t.createTHead().insertRow(), corpo = t.createTBody().insertRow();
+  for (const [comp, nota] of linhas) {
+    const th = document.createElement("th");
+    th.innerHTML = comp.innerHTML;
+    cab.appendChild(th);
+    corpo.insertCell().innerHTML = nota.innerHTML;
+  }
+  const status = [...c.querySelectorAll("p, h2")].find(e => /^\s*(\d+\.\s*)?status/i.test(e.textContent));
+  if (!status) return;
+  let ponto = status;
+  if (status.tagName === "H2") {           // status em seção própria: inserir ao fim dela
+    while (ponto.nextElementSibling && ponto.nextElementSibling.tagName !== "H2") ponto = ponto.nextElementSibling;
+  }
+  const prev = orig.previousElementSibling;
+  if (prev && prev.tagName === "H2" && /nota/i.test(prev.textContent)) prev.remove();
+  orig.remove();
+  ponto.after(t);
+}
+
+const norm = t => t.toLowerCase().replace(/[“”"'‘’]/g, "").replace(/(\p{L})-\s+(?=\p{L})/gu, "$1").replace(/\.\.\.|…|\[\.\.\.\]/g, " ")
+  .replace(/\(sem[^)]*\)/g, "").replace(/\s+/g, " ").trim();
+
+// Lê as tabelas da C1: { trecho, tipo, corr, ini, fim }
+function lerDesviosC1(c) {
+  const h2c1 = [...c.querySelectorAll("h2")].find(h => /^C1\b/i.test(h.textContent.trim()));
+  if (!h2c1) return [];
+  const rows = [];
+  for (let e = h2c1.nextElementSibling; e && e.tagName !== "H2"; e = e.nextElementSibling) {
+    if (e.tagName !== "TABLE") continue;
+    const cab = [...e.querySelectorAll("th")].map(x => x.textContent.trim().toLowerCase());
+    const iT = cab.findIndex(x => x.startsWith("trecho")), iL = cab.findIndex(x => x.startsWith("linha"));
+    const iE = cab.findIndex(x => x.startsWith("tipo")), iC = cab.findIndex(x => x.startsWith("corre"));
+    if (iT < 0 || iC < 0) continue;
+    for (const tr of e.querySelectorAll("tbody tr")) {
+      const m = (tr.cells[iL] ? tr.cells[iL].textContent : "").match(/(\d+)(?:\s*[-–]\s*L?(\d+))?/);
+      rows.push({ trecho: norm(tr.cells[iT].textContent), tipo: iE >= 0 ? tr.cells[iE].textContent.trim() : "",
+                  corr: tr.cells[iC].textContent.trim(),
+                  ini: m ? +m[1] : null, fim: m ? +(m[2] || m[1]) : null });
+    }
+  }
+  return rows;
+}
+
+function linhaDe(el) {
+  let txt = "";
+  for (let n = el.previousSibling; n; n = n.previousSibling) {
+    if (n.nodeName === "STRONG") txt = n.textContent + txt; else txt = (n.textContent || "") + txt;
+    const m = [...txt.matchAll(/L(\d+):/g)];
+    if (m.length) return +m[m.length - 1][1];
+  }
+  return null;
+}
+
+function anotarNegritos(c) {
+  const rows = lerDesviosC1(c);
+  const h = [...c.querySelectorAll("h2")].find(x => /texto transcrito/i.test(x.textContent));
+  if (!rows.length || !h) return;
+  for (let e = h.nextElementSibling; e && e.tagName !== "H2"; e = e.nextElementSibling) {
+    for (const st of e.querySelectorAll("strong")) {
+      const s = norm(st.textContent).replace(/^-|-$/g, "");
+      if (!s) continue;
+      const ln = linhaDe(st);
+      let melhor = null, pont = 0;
+      for (const r of rows) {
+        if (!r.trecho) continue;
+        let p = 0;
+        if (r.trecho.includes(s)) p = 1 + s.length / r.trecho.length;
+        else if (s.includes(r.trecho)) p = 1 + r.trecho.length / s.length;
+        else continue;
+        if (ln != null && r.ini != null && ln >= r.ini - 1 && ln <= r.fim + 1) p += 2;
+        if (p > pont) { pont = p; melhor = r; }
+      }
+      if (melhor) { st.dataset.corr = melhor.corr; st.dataset.tipo = melhor.tipo; }
+    }
+  }
+}
+
+
+// C4: destaca em rosa, no texto transcrito, os trechos citados nos pontos de comentário da C4
+// (formato: "P1, L7 - **título**.  Em "trecho" --> orientação")
+function textoComBr(el) {
+  let t = "";
+  for (const n of el.childNodes) t += n.nodeName === "BR" ? "\n" : n.textContent;
+  return t;
+}
+
+function anotarC4(c) {
+  const h4 = [...c.querySelectorAll("h2")].find(h => /^C4\b/i.test(h.textContent.trim()));
+  const ht = [...c.querySelectorAll("h2")].find(x => /texto transcrito/i.test(x.textContent));
+  if (!h4 || !ht) return;
+  const pontos = [];
+  for (let e = h4.nextElementSibling; e && e.tagName !== "H2"; e = e.nextElementSibling) {
+    if (e.tagName !== "P") continue;
+    const m = textoComBr(e).match(/^\s*(.*?)\s+-\s+(.+?)\.?\s*\n\s*Em\s+([\s\S]*?)\s*-->\s*([\s\S]*)$/);
+    if (!m) continue;
+    const linhas = [];
+    for (const l of m[1].matchAll(/L(\d+)(?:\s*[-–]\s*L?(\d+))?/g)) linhas.push([+l[1], +(l[2] || l[1])]);
+    const trechos = [];
+    for (const q of m[3].matchAll(/["“]([^"”]+)["”]\s*(\(([^)]*)\))?/g)) {
+      const ls = [...(q[3] || "").matchAll(/L(\d+)(?:\s*[-–]\s*L?(\d+))?/g)].map(l => [+l[1], +(l[2] || l[1])]);
+      for (const parte of q[1].split(/\.\.\.|…|\[\.\.\.\]/)) if (parte.trim().length > 1) trechos.push({ txt: parte.trim(), linhas: ls.length ? ls : linhas });
+    }
+    if (trechos.length) pontos.push({ titulo: m[2].replace(/\*/g, "").trim(), orient: m[4].trim(), trechos });
+  }
+  if (!pontos.length) return;
+  const esc = w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let marcou = false;
+  for (let e = ht.nextElementSibling; e && e.tagName !== "H2"; e = e.nextElementSibling) {
+    if (e.tagName !== "P") continue;
+    const partes = [], walker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+    let full = "";
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      partes.push({ node: n, ini: full.length, fim: full.length + n.data.length });
+      full += n.data + " ";
+    }
+    const achados = [];
+    for (const pt of pontos) for (const t of pt.trechos) {
+      const re = new RegExp(t.txt.split(/\s+/).map(esc).join("\\s+(?:L\\d+:\\s*)?"), "gi");
+      for (const m of full.matchAll(re)) {
+        const ult = [...full.slice(0, m.index).matchAll(/L(\d+):/g)].pop();
+        const ln = ult ? +ult[1] : null;
+        if (t.linhas.length && ln != null && !t.linhas.some(([a, b]) => ln >= a - 1 && ln <= b + 1)) continue;
+        achados.push({ ini: m.index, fim: m.index + m[0].length, pt });
+      }
+    }
+    achados.sort((a, b) => b.ini - a.ini);
+    let limite = Infinity;
+    for (const a of achados) {
+      if (a.fim > limite) continue;      // sobreposição: mantém o primeiro
+      limite = a.ini;
+      for (const pe of [...partes].reverse()) {
+        const ini = Math.max(a.ini, pe.ini), fim = Math.min(a.fim, pe.fim);
+        if (ini >= fim) continue;
+        let nodo = pe.node;
+        if (fim - pe.ini < nodo.data.length) nodo.splitText(fim - pe.ini);
+        if (ini - pe.ini > 0) nodo = nodo.splitText(ini - pe.ini);
+        const mk = document.createElement("mark");
+        mk.className = "c4"; mk.dataset.corr = a.pt.orient; mk.dataset.tipo = "C4 · " + a.pt.titulo;
+        nodo.replaceWith(mk); mk.appendChild(nodo);
+        marcou = true;
+      }
+    }
+  }
+  if (marcou) {
+    const leg = [...ht.parentNode.querySelectorAll("p")].find(p => /^\s*Em\s+negrito/i.test(p.textContent));
+    if (leg) leg.append(" Em ", Object.assign(document.createElement("mark"), { className: "c4", textContent: "rosa" }), ": falhas de coesão (C4).");
+  }
+}
+
+const balao = document.getElementById("balao");
+const conteudoEl = document.getElementById("conteudo");
+conteudoEl.addEventListener("mouseover", e => {
+  const st = e.target.closest("strong[data-corr], mark[data-corr]");
+  if (!st) return;
+  balao.innerHTML = "";
+  if (st.dataset.tipo) { const sm = document.createElement("small"); sm.textContent = st.dataset.tipo; balao.appendChild(sm); }
+  balao.appendChild(document.createTextNode(st.dataset.corr));
+  balao.style.display = "block";
+  const r = st.getBoundingClientRect(), b = balao.getBoundingClientRect();
+  let x = Math.min(Math.max(8, r.left), window.innerWidth - b.width - 8);
+  let y = r.top - b.height - 6;
+  if (y < 8) y = r.bottom + 6;
+  balao.style.left = x + "px"; balao.style.top = y + "px";
+});
+conteudoEl.addEventListener("mouseout", e => {
+  if (e.target.closest("strong[data-corr], mark[data-corr]")) balao.style.display = "none";
+});
+
+// Pills C1..C5 no header da tela: rolam até o título da competência
+function pillsCompetencias(c) {
+  const rol = document.getElementById("rolagem");
+  const alvo = document.getElementById("pills");
+  alvo.innerHTML = "";
+  const topo = document.createElement("button");
+  topo.type = "button"; topo.className = "topo"; topo.textContent = "↑ Topo";
+  topo.onclick = () => rol.scrollTo({ top: 0, behavior: "smooth" });
+  alvo.appendChild(topo);
+  const hs = [...c.querySelectorAll("h2")].filter(h => /^C[1-5]\b/i.test(h.textContent.trim()));
+  for (const h of hs) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = h.textContent.trim().slice(0, 2).toUpperCase();
+    b.onclick = () => rol.scrollTo({ top: rol.scrollTop + h.getBoundingClientRect().top - rol.getBoundingClientRect().top, behavior: "smooth" });
+    alvo.appendChild(b);
+  }
+}
+
+async function mostrar(caminho) {
+  const r = await fetch(caminho.split("/").map(encodeURIComponent).join("/"));
+  const c = document.getElementById("conteudo");
+  c.innerHTML = marked.parse(await r.text());
+  notasHorizontais(c);
+  anotarNegritos(c);
+  anotarC4(c);
+  pillsCompetencias(c);
+  document.getElementById("rolagem").scrollTop = 0;
+  marcarAtivo(caminho);
+  const conf = lerConferidas();
+  if (!conf.has(caminho)) { conf.add(caminho); salvarConferidas(conf); }
+  document.querySelectorAll("#sidebar a").forEach(a => {
+    if (a.dataset.caminho === caminho) a.parentElement.classList.add("conferida");
+  });
+  atualizarBadge();
+  location.hash = encodeURIComponent(caminho);
+}
+
+async function listar(label, _titulo, idUl) {
+  const pasta = "correcoes";
+  const ul = document.getElementById(idUl);
+  const r = await fetch(encodeURIComponent(pasta) + "/");
+  const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+  const arquivos = [...doc.querySelectorAll("a")]
+    .map(a => decodeURIComponent(a.getAttribute("href")))
+    .filter(h => h.endsWith(".md") && h.split("_")[1] === label)
+    .sort();
+  const conf = lerConferidas();
+  for (const nome of arquivos) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    const caminho = pasta + "/" + nome;
+    a.href = "#" + encodeURIComponent(caminho);
+    a.dataset.caminho = caminho;
+    const m = nome.replace(/\.md$/, "").match(/^(\d+)_([A-Z]+)_(\d{4}-\d{2}-\d{2})_(.+?)_(.+)$/);
+    if (m) {
+      const [, num, lab, data, aluno, tema] = m;
+      const el = (cls, txt) => { const e = document.createElement("span"); e.className = cls; e.textContent = txt; return e; };
+      const l1 = el("linha1", "");
+      l1.append(el("num", num), el("nome", aluno.replace(/-/g, " ")), el("tag " + lab, lab));
+      a.append(l1, el("tema", tema.replace(/-/g, " ")));
+      a.title = nome + " (" + data + ")";
+    } else a.textContent = nome.replace(/\.md$/, "");
+    a.onclick = e => { e.preventDefault(); mostrar(caminho); };
+    li.classList.toggle("conferida", conf.has(caminho));
+    li.appendChild(a);
+    ul.appendChild(li);
+  }
+}
+
+Promise.all(pastas.map(p => listar(...p))).then(() => {
+  atualizarBadge();
+  if (location.hash.length > 1) mostrar(decodeURIComponent(location.hash.slice(1)));
+  abrirPendentes(false);
+}).catch(() => {
+  document.getElementById("conteudo").textContent =
+    "Erro ao listar. Rode 'python3 -m http.server' nesta pasta e abra http://localhost:8000/";
+});
+</script>
 </body>
 </html>
