@@ -127,6 +127,16 @@ Se houver dúvida se o caso é fuga total ou tangenciamento, adote o nível mais
 
 **Rasuras não descontam pontos:** não as conte como desvios. Liste cada desvio e cada problema sintático em uma tabela com as colunas **Parágrafo | Linha | Trecho | Tipo de erro | Correção sugerida**, uma tabela para desvios gramaticais e outra para problemas sintáticos. Só depois totalize. Contabilize separadamente:
 
+**Regra do desvio repetido (vale para os desvios gramaticais):** o mesmo desvio conta **uma única vez**, por mais que se repita. Unidade de contagem = **mesma forma errada + mesmo tipo de erro**. Ex.: "carro" no lugar de "caro" escrito 5 vezes é 1 desvio; "voce" e "tambem" são 2 desvios, mesmo sendo ambos de acentuação.
+- **Ortografia, acentuação, registro, vocabulário:** mesma palavra ou expressão com o mesmo erro = 1. Palavras diferentes = desvios diferentes.
+- **Crase:** mesma locução ou termo com o mesmo erro = 1 (ex.: "a medida que" ×3). Locuções ou termos regidos diferentes = desvios diferentes.
+- **Pronomes, concordância, regência, tempos e modos verbais:** mesmo verbo, termo ou sintagma com o mesmo erro = 1. Verbos, termos ou sintagmas diferentes = desvios diferentes.
+- **Pontuação:** conta **por posição**. Cada posição da frase com vírgula ou sinal ausente ou indevido é um desvio, mesmo que o padrão se repita (ex.: "Portanto" sem vírgula em dois parágrafos = 2).
+- **Registro na tabela:** uma linha por desvio. Na coluna **Linha**, liste todas as ocorrências (ex.: "L3, L8, L15") e acrescente "(×N)" ao trecho quando N ≥ 2.
+- **Parágrafo para a distribuição:** o desvio repetido conta no parágrafo da primeira ocorrência.
+- **Reincidência:** o desvio repetido (×2 ou mais) conta uma vez no total, mas é **reincidência**. O nível 200 só aceita desvios "como excepcionalidade e quando não caracterizarem reincidência" (Cartilha do Participante). Portanto, havendo qualquer desvio reincidente, a coluna de desvios gramaticais fica no máximo em 160.
+- **Problemas sintáticos:** esta regra **não** se aplica. Cada período truncado, justaposto ou com falta de elemento essencial é um problema distinto, mesmo que o padrão se repita. Só a repetição da mesma frase conta uma vez.
+
 - **Desvios gramaticais:** ortografia, acentuação, pontuação, concordância, regência, crase, colocação pronominal, flexão, registro (oralidade/gíria).
 - **Problemas sintáticos:** período truncado, falta de elemento essencial, justaposição indevida, estrutura enviesada, ausência de paralelismo.
 
@@ -134,14 +144,20 @@ Gradação:
 
 | Nota | Desvios gramaticais | Problemas sintáticos |
 |---|---|---|
-| 200 | no máximo 2 | no máximo 1 |
+| 200 | no máximo 2, sem reincidência | no máximo 1 |
 | 160 | cerca de 3, em no máximo 3 parágrafos | 2 ou 3 |
 | 120 | até 6, espalhados por todos os parágrafos | até 5 |
 | 80 | 6 ou mais em cada parágrafo | 6 ou mais por parágrafo |
 | 40 | pior que o nível 80 | pior que o nível 80 |
 | 0 | total incompreensão da estrutura frasal ou nenhuma aplicação da norma culta | |
 
-**Regra de combinação:** a nota da C1 é a **menor** entre a nota indicada pelos desvios gramaticais e a indicada pelos problemas sintáticos. Quando a contagem cair entre dois níveis, use o nível inferior e cite a contagem na justificativa.
+**Regra de combinação:** a Cartilha não combina as duas colunas por mínimo: desvios e estrutura sintática entram juntos na descrição de um mesmo nível, e o que define o nível é a frequência das falhas e o quanto elas prejudicam a compreensão. Por isso, primeiro ache o nível de cada coluna (desvios gramaticais, já com a regra do desvio repetido e o limite de 160 por reincidência; e problemas sintáticos) e depois combine assim:
+- **Mesmo nível nas duas colunas:** use esse nível.
+- **Níveis adjacentes (40 pontos de diferença):** use o inferior.
+- **Dois níveis de distância (80 pontos):** use **um nível acima do inferior** (ex.: 200 e 120 dão 160) e registre dúvida, com a nota alternativa igual ao nível inferior. **Exceção:** se os problemas sintáticos prejudicam a compreensão do texto, use o nível inferior.
+- **Três níveis de distância ou mais:** use o nível inferior e registre dúvida.
+
+Quando a contagem de uma coluna cair entre dois níveis, use o nível inferior dessa coluna e cite a contagem na justificativa.
 
 ### COMPETÊNCIA 2: Compreensão do Tema e Repertório Sociocultural
 
@@ -309,7 +325,7 @@ Cada elemento válido vale 40 pontos. Para cada um, cite o trecho:
 
 ## REGISTRO DE DÚVIDAS: COMO CONDUZIR
 
-Use quando a evidência não resolver entre dois níveis (ex.: produtividade de repertório ou dúvida se é de bolso, compatibilidade funcional do agente, ação que pode ser só constatação ou ser vaga demais, elemento da C5 duvidoso). Leituras incertas de manuscrito **não** entram aqui: vão para a lista de leituras incertas.
+Use quando a evidência não resolver entre dois níveis (ex.: produtividade de repertório ou dúvida se é de bolso, compatibilidade funcional do agente, ação que pode ser só constatação ou ser vaga demais, elemento da C5 duvidoso, combinação da C1 com colunas a 80 pontos ou mais de distância). Leituras incertas de manuscrito **não** entram aqui: vão para a lista de leituras incertas.
 
 - **Nunca pergunte ao aluno.** A nota é sempre entregue e é sempre **FINAL**.
 - Adote o **nível mais baixo** entre os possíveis.
@@ -350,11 +366,11 @@ Logo abaixo do título, escreva uma linha: "Em **negrito**: desvios gramaticais 
 - Cabeçalho da folha (nome, data, turma) e título do tema não entram, a menos que o aluno os tenha numerado.
 
 **O que vai em negrito:**
-- Em negrito vai **exatamente o trecho citado na coluna "Trecho"** de cada linha das duas tabelas de C1 (desvios gramaticais e problemas sintáticos), sempre o menor trecho que mostra o erro.
+- Em negrito vai **exatamente o trecho citado na coluna "Trecho"** de cada linha das duas tabelas de C1 (desvios gramaticais e problemas sintáticos), sempre o menor trecho que mostra o erro. Desvio repetido: negrite **todas as ocorrências** listadas na coluna "Linha", embora ele conte uma só vez.
 - Quando o desvio é a **falta** de algo (vírgula, ponto final, acento, artigo), negrite a palavra ao lado da qual o sinal falta.
 - Trecho que atravessa linhas: negrite nas duas linhas.
 - **Só** o que foi contado na C1 recebe negrito. Leituras incertas, rasuras, problemas de C2 a C5 e qualquer outro trecho **não** são negritados.
-- Confira no fim: toda linha das duas tabelas de C1 tem de estar marcada no texto transcrito, e nenhum negrito pode ficar sem linha correspondente nas tabelas.
+- Confira no fim: toda ocorrência listada nas duas tabelas de C1 tem de estar marcada no texto transcrito, e nenhum negrito pode ficar sem ocorrência correspondente nas tabelas.
 
 ---
 
@@ -439,7 +455,7 @@ Dentro da seção `## C1`, logo após o comentário e **antes da linha da nota**
 - `### Desvios gramaticais`
 - `### Problemas sintáticos`
 
-Cada linha da tabela é uma ocorrência. Depois de cada tabela, escreva só o total e a contagem por parágrafo (ex.: "Total: 13 (P1 3, P2 5, P3 4, P4 1)"). Se não houver ocorrências, escreva "Nenhum". Estas tabelas permitem ao professor conferir a contagem da C1, e por isso devem bater exatamente com o número citado no comentário. Rasuras não entram.
+Cada linha da tabela é um desvio ou problema (desvio repetido: uma só linha, com todas as linhas na coluna "Linha" e "(×N)" no trecho; ver "Regra do desvio repetido"). Depois de cada tabela, escreva só o total (já sem repetições) e a contagem por parágrafo (ex.: "Total: 13 (P1 3, P2 5, P3 4, P4 1)"). Se houver desvio reincidente, diga numa frase que ele limita a coluna de desvios a 160. Se não houver ocorrências, escreva "Nenhum". Estas tabelas permitem ao professor conferir a contagem da C1, e por isso devem bater exatamente com o número citado no comentário. Rasuras não entram.
 
 #### 3. Notas (consolidação)
 
