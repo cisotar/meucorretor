@@ -136,7 +136,7 @@ Em "as redes sociais possibilitaram a exibição da vida das pessoas... indivíd
 **Raciocínio:** 3 transições válidas e pelo menos 2 conectivos por parágrafo na maior parte do texto, com repetição pontual de "também" e um conectivo inadequado.
 
 P1, L3 - **repetição de "também"**.  
-Em "também é resultado disso" --> Notei que você repetiu o conectivo "também" 3 vezes (L3, L6, L16). Substitua-o por um sinônimo como "ainda" ou "igualmente".
+Em "também é resulta-... do disso" --> Notei que você repetiu o conectivo "também" 3 vezes (L3, L6, L16). Substitua-o por um sinônimo como "ainda" ou "igualmente".
 
 P3, L22 - **"Sobretudo" mal empregado**.  
 Em "Sobretudo, o indivíduo é prejudicado pelo governo" --> Troque por "Dessa forma" ou "Assim", que concluem o raciocínio do parágrafo.

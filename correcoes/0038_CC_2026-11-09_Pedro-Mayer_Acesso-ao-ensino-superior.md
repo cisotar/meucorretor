@@ -139,7 +139,7 @@ P2, L11-14 - **ideias empilhadas sem conectivo**.
 Em "e que ela só pode ser alcançada a partir de uma base sólida, é possível criar uma relação direta" --> Separe as ideias em dois períodos e ligue-as com um conectivo, como "Dessa forma".
 
 P2, L14-15 - **"Em conformidade" sem complemento**.  
-Em "Em conformidade, Nelson Mandela diz" --> Troque por "Nesse sentido, Nelson Mandela diz".
+Em "Em conformi-... dade, Nelson Mandela diz" --> Troque por "Nesse sentido, Nelson Mandela diz".
 
 **Nota: 160**
 
