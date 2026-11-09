@@ -99,7 +99,7 @@
 </div></div>
 
 <script>
-// Requer servidor local: python3 -m http.server  (abrir http://localhost:8000/)
+// Lista vem de correcoes/index.json (rode gerar-indice.py ao adicionar correções).
 const pastas = [
   ["CC", "Correções completas (CC)", "lista-correcoes"],
   ["CS", "Correções simplificadas (CS)", "lista-simplificadas"],
@@ -402,12 +402,15 @@ async function mostrar(caminho) {
 async function listar(label, _titulo, idUl) {
   const pasta = "correcoes";
   const ul = document.getElementById(idUl);
-  const r = await fetch(encodeURIComponent(pasta) + "/");
-  const doc = new DOMParser().parseFromString(await r.text(), "text/html");
-  const arquivos = [...doc.querySelectorAll("a")]
-    .map(a => decodeURIComponent(a.getAttribute("href")))
-    .filter(h => h.endsWith(".md") && h.split("_")[1] === label)
-    .sort();
+  let nomes;
+  const ri = await fetch(pasta + "/index.json");
+  if (ri.ok) nomes = await ri.json();
+  else {
+    const r = await fetch(encodeURIComponent(pasta) + "/");
+    const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+    nomes = [...doc.querySelectorAll("a")].map(a => decodeURIComponent(a.getAttribute("href")));
+  }
+  const arquivos = nomes.filter(h => h.endsWith(".md") && h.split("_")[1] === label).sort();
   const conf = lerConferidas();
   for (const nome of arquivos) {
     const li = document.createElement("li");
