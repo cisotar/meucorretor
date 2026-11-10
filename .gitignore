@@ -1,3 +1,4 @@
-# Imagens e PDFs das redações dos alunos (ficam só no computador)
-redacoes/
+# Redações já corrigidas: a transcrição fica na correção; as imagens ficam só no computador
+redacoes/corrigidas/
+# Arquivos compactados (downloads do Drive etc.) ficam só no computador
 *.zip
