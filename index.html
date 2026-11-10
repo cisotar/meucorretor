@@ -38,25 +38,32 @@
                    display: grid; place-items: center; font-weight: 700; box-shadow: var(--shadow); }
   #sidebar h1 { font-size: 1.1rem; margin: 0; letter-spacing: -.01em; }
 
-  details { margin-bottom: .6rem; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-  summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: "›"; transition: transform .2s; color: var(--muted); font-size: 1.2rem; }
-  details[open] summary::after { transform: rotate(90deg); }
-  details ul { list-style: none; margin: 0; padding: 0 .4rem .5rem; }
-  details li a { display: flex; flex-direction: column; gap: .05rem; padding: .45rem .6rem; border-radius: 10px; color: var(--text);
+  #sidebar details { margin-bottom: .6rem; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  #sidebar summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  #sidebar summary::-webkit-details-marker { display: none; }
+  #sidebar summary::after { content: "›"; transition: transform .2s; color: var(--muted); font-size: 1.2rem; }
+  #sidebar details[open] summary::after { transform: rotate(90deg); }
+  #sidebar details ul { list-style: none; margin: 0; padding: 0 .4rem .5rem; }
+  #sidebar details li a { display: flex; flex-direction: column; gap: .05rem; padding: .45rem .6rem; border-radius: 10px; color: var(--text);
                  text-decoration: none; font-size: .88rem; border-left: 3px solid transparent; }
-  details li a:hover { background: var(--surface-2); }
-  details li a.ativo { background: var(--accent-bg); border-left-color: var(--accent); }
-  details li a .linha1 { display: flex; align-items: baseline; gap: .45rem; }
-  details li a .num { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
-  details li a .nome { font-weight: 600; overflow-wrap: anywhere; }
-  details li a .tag { margin-left: auto; flex: none; font-size: .62rem; font-weight: 700; padding: .05rem .4rem; border-radius: 6px; letter-spacing: .04em; background: var(--line); color: var(--muted); }
-  details li a .tag.CC { background: var(--cc-bg); color: var(--cc); } details li a .tag.CS { background: var(--cs-bg); color: var(--cs); }
-  details li a .tema { color: var(--muted); font-size: .75rem; }
-  details ul.arq li a { font-weight: 600; overflow-wrap: anywhere; }
-  details li.conferida a .linha1::after { content: "✓"; color: var(--ok); font-weight: bold; flex: none; }
+  #sidebar details li a:hover { background: var(--surface-2); }
+  #sidebar details li a.ativo { background: var(--accent-bg); border-left-color: var(--accent); }
+  #sidebar details li a .linha1 { display: flex; align-items: baseline; gap: .45rem; }
+  #sidebar details li a .num { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
+  #sidebar details li a .nome { font-weight: 600; overflow-wrap: anywhere; }
+  #sidebar details li a .tag { margin-left: auto; flex: none; font-size: .62rem; font-weight: 700; padding: .05rem .4rem; border-radius: 6px; letter-spacing: .04em; background: var(--line); color: var(--muted); }
+  #sidebar details li a .tag.CC { background: var(--cc-bg); color: var(--cc); } #sidebar details li a .tag.CS { background: var(--cs-bg); color: var(--cs); }
+  #sidebar details li a .tema { color: var(--muted); font-size: .75rem; }
+  #sidebar details ul.arq li a { font-weight: 600; overflow-wrap: anywhere; }
+  #sidebar details li.conferida a .linha1::after { content: "✓"; color: var(--ok); font-weight: bold; flex: none; }
 
+  #busca { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: .55rem .8rem;
+           font: inherit; color: var(--text); margin-bottom: .7rem; outline: none; }
+  #busca:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  #busca::placeholder { color: var(--muted); }
+  #sidebar li.sem-busca, #sidebar details.sem-resultado { display: none !important; }
+  #msg-busca { display: none; margin: .2rem .4rem; color: var(--muted); font-size: .85rem; }
+  #msg-busca.mostrar { display: block; }
   #ocultar-lidas { display: inline-flex; align-items: center; margin: 0 0 .9rem; padding: .25rem .85rem; border: 1px solid var(--line);
                    border-radius: 999px; background: var(--surface); color: var(--muted); font-size: .8rem; font-weight: 600; cursor: pointer; }
   #ocultar-lidas:hover { background: var(--surface-2); }
@@ -117,6 +124,29 @@
   #balao small { display: block; color: #b9bfc9; margin-bottom: .15rem; }
 
   /* ---------- Modal ---------- */
+  /* ---------- Texto transcrito justificado ---------- */
+  #conteudo p.transc { margin: 0 auto 1rem; }
+  #conteudo p.transc .lt { text-align: justify; text-align-last: justify; }
+  #conteudo p.transc .lt:last-child, #conteudo p.transc .lt.longa { text-align-last: left; }
+
+  /* ---------- Sanfonas dentro da correção ---------- */
+  #conteudo details.bloco { margin: 1rem 0; background: var(--surface-2); border: 1px solid var(--line); border-left-width: 4px; border-radius: 12px; }
+  #conteudo details.bloco.pos { border-left-color: var(--ok); }
+  #conteudo details.bloco.neg { border-left-color: var(--danger); }
+  #conteudo details.bloco.leituras { border-left-color: var(--cs); }
+  #conteudo details.bloco > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between;
+                                      padding: .6rem 1rem; font-weight: 700; font-size: .82rem; letter-spacing: .05em; text-transform: uppercase; }
+  #conteudo details.bloco > summary::-webkit-details-marker { display: none; }
+  #conteudo details.bloco > summary::after { content: "›"; color: var(--muted); font-size: 1.2rem; transition: transform .2s; }
+  #conteudo details.bloco[open] > summary::after { transform: rotate(90deg); }
+  #conteudo details.bloco.comp { border-left-color: var(--accent); }
+  #conteudo details.bloco.comp > summary { text-transform: none; letter-spacing: 0; font-size: 1.02rem; gap: .6rem; }
+  #conteudo details.bloco.comp > summary .tit { flex: 1; }
+  #conteudo details.bloco.comp > summary .nota { background: var(--accent-bg); color: var(--accent); border-radius: 999px; padding: 0 .7rem; font-size: .85rem; }
+  #conteudo details.bloco .corpo { padding: 0 1.1rem .8rem; }
+  #conteudo details.bloco .corpo > :first-child { margin-top: 0; }
+  #conteudo details.bloco .corpo > :last-child { margin-bottom: 0; }
+
   #modal { position: fixed; inset: 0; background: rgba(90,98,110,.45); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 10; }
   #modal.aberto { display: flex; }
   #modal .caixa { background: var(--surface); border-radius: 18px; width: min(600px, 92vw); max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 24px 60px rgba(40,48,60,.35); overflow: hidden; }
@@ -144,7 +174,9 @@
 <body>
 <aside id="sidebar">
   <div class="marca"><div class="logo">C</div><h1>Correções</h1></div>
+  <input id="busca" type="search" placeholder="Buscar por nome, número, tema…" autocomplete="off" aria-label="Buscar redação">
   <button id="ocultar-lidas" type="button" aria-pressed="false" title="Esconder da lista as redações já lidas">Ocultar lidas<span class="estado">off</span></button>
+  <p id="msg-busca">Nenhum resultado.</p>
   <details name="sanfona" open><summary>Redações</summary><p id="msg-lidas">Todas as redações foram lidas.</p><ul id="lista-redacoes"></ul></details>
   <details name="sanfona"><summary>Propostas</summary><ul id="lista-propostas" class="arq"></ul></details>
   <details name="sanfona"><summary>Agentes</summary><ul id="lista-agentes" class="arq"></ul></details>
@@ -491,6 +523,102 @@ function anotarC4(c) {
   }
 }
 
+
+// ---------- Estrutura da correção: sanfonas e texto justificado ----------
+function nosAte(inicio, parar) {
+  const out = [];
+  for (let e = inicio.nextElementSibling; e && !parar(e); e = e.nextElementSibling) out.push(e);
+  return out;
+}
+function sanfona(titulo, nos, aberta, classe, nota) {
+  const d = document.createElement("details");
+  d.className = "bloco " + classe; d.open = aberta;
+  const sm = document.createElement("summary");
+  if (nota) {
+    const t = document.createElement("span"); t.className = "tit"; t.textContent = titulo;
+    const n = document.createElement("span"); n.className = "nota"; n.textContent = nota;
+    sm.append(t, n);
+  } else sm.textContent = titulo;
+  d.appendChild(sm);
+  const corpo = document.createElement("div"); corpo.className = "corpo"; d.appendChild(corpo);
+  nos.forEach(n => corpo.appendChild(n));
+  return d;
+}
+
+// Leituras incertas: vai para logo depois do texto transcrito, em sanfona fechada (vale também para correções antigas).
+function sanfonaLeituras(c) {
+  const h = [...c.querySelectorAll("h2")].find(x => /^leituras incertas/i.test(x.textContent.trim()));
+  if (!h) return;
+  const nos = nosAte(h, e => e.tagName === "H2");
+  const linhas = nos.reduce((n, e) => n + e.querySelectorAll("tbody tr").length, 0);
+  const d = sanfona("Leituras incertas" + (linhas ? " (" + linhas + ")" : ""), nos, false, "leituras");
+  const ht = [...c.querySelectorAll("h2")].find(x => /texto transcrito/i.test(x.textContent));
+  let ref = null;
+  if (ht) { ref = ht.nextElementSibling; while (ref && ref.tagName !== "H2") ref = ref.nextElementSibling; }
+  if (!ht || ref === h) h.replaceWith(d);
+  else { h.remove(); if (ref) ref.before(d); else c.append(d); }
+}
+
+// C4 e C5: PONTOS POSITIVOS/NEGATIVOS e ELEMENTOS PRESENTES/AUSENTES viram sanfonas (positivos/presentes fechadas).
+function sanfonasSubsecoes(c) {
+  const alvo = /^(pontos (positivos|negativos)|elementos (presentes|ausentes))$/i;
+  for (const h2 of [...c.querySelectorAll("h2")]) {
+    if (!/^C[45]\b/i.test(h2.textContent.trim())) continue;
+    for (let e = h2.nextElementSibling; e && e.tagName !== "H2"; ) {
+      if (e.tagName === "H3" && alvo.test(e.textContent.trim())) {
+        const titulo = e.textContent.trim();
+        const bom = /positivos|presentes/i.test(titulo);
+        const nos = nosAte(e, x => /^(H2|H3|HR)$/.test(x.tagName) || (x.tagName === "P" && /^nota\s*:/i.test(x.textContent.trim())));
+        const d = sanfona(titulo, nos, !bom, bom ? "pos" : "neg");
+        e.replaceWith(d);
+        e = d.nextElementSibling;
+      } else e = e.nextElementSibling;
+    }
+  }
+}
+
+// Análise por competência: cada C1..C5 (título h2 ou h3) vira uma sanfona, todas fechadas; a nota aparece no resumo.
+function sanfonasCompetencias(c) {
+  const ehC = h => /^(H2|H3)$/.test(h.tagName) && /^C[1-5]\b/i.test(h.textContent.trim());
+  for (const h of [...c.querySelectorAll("h2, h3")]) {
+    if (!ehC(h) || h.closest("details")) continue;
+    const parar = h.tagName === "H2" ? (x => x.tagName === "H2") : (x => x.tagName === "H2" || ehC(x));
+    const nos = nosAte(h, parar);
+    const pn = nos.find(e => e.tagName === "P" && /^nota\s*:\s*\d+/i.test(e.textContent.trim()));
+    const nota = pn ? pn.textContent.trim().match(/^nota\s*:\s*(\d+)/i)[1] : "";
+    const d = sanfona(h.textContent.trim(), nos, false, "comp", nota);
+    d.dataset.comp = h.textContent.trim().slice(0, 2).toUpperCase();
+    h.replaceWith(d);
+  }
+}
+
+// Texto transcrito: cada linha da folha vira um bloco justificado, numa coluna com a largura típica da folha.
+function justificarTranscricao(c) {
+  const ht = [...c.querySelectorAll("h2")].find(x => /texto transcrito/i.test(x.textContent));
+  if (!ht) return;
+  const ps = nosAte(ht, e => e.tagName === "H2").filter(e => e.tagName === "P" && e.querySelector("br"));
+  const grupos = [];
+  for (const p of ps) {
+    const linhas = [[]];
+    for (const n of [...p.childNodes]) { if (n.nodeName === "BR") linhas.push([]); else linhas[linhas.length - 1].push(n); }
+    grupos.push([p, linhas.filter(l => l.some(n => n.textContent.trim()))]);
+  }
+  const tams = grupos.flatMap(([, ls]) => ls.map(l => l.map(n => n.textContent).join("").replace(/^\s*L\d+:\s*/, "").trim().length)).sort((a, b) => a - b);
+  if (!tams.length) return;
+  const p90 = tams[Math.min(tams.length - 1, Math.floor(tams.length * 0.9))];
+  for (const [p, ls] of grupos) {
+    p.classList.add("transc");
+    p.style.maxWidth = Math.max(40, Math.round((p90 + 6) * 0.95)) + "ch";
+    p.textContent = "";
+    for (const l of ls) {
+      const d = document.createElement("div"); d.className = "lt";
+      l.forEach(n => d.appendChild(n));
+      if (d.textContent.replace(/^\s*L\d+:\s*/, "").trim().length > p90) d.classList.add("longa");
+      p.appendChild(d);
+    }
+  }
+}
+
 const balao = document.getElementById("balao");
 const conteudoEl = document.getElementById("conteudo");
 conteudoEl.addEventListener("mouseover", e => {
@@ -519,12 +647,15 @@ function pillsCompetencias(c) {
   topo.type = "button"; topo.className = "topo"; topo.textContent = "↑ Topo";
   topo.onclick = () => rol.scrollTo({ top: 0, behavior: "smooth" });
   alvo.appendChild(topo);
-  const hs = [...c.querySelectorAll("h2, h3")].filter(h => /^C[1-5]\b/i.test(h.textContent.trim()));
+  const hs = [...c.querySelectorAll("details.comp, h2, h3")].filter(h => h.matches("details.comp") || /^C[1-5]\b/i.test(h.textContent.trim()));
   for (const h of hs) {
     const b = document.createElement("button");
     b.type = "button";
-    b.textContent = h.textContent.trim().slice(0, 2).toUpperCase();
-    b.onclick = () => rol.scrollTo({ top: rol.scrollTop + h.getBoundingClientRect().top - rol.getBoundingClientRect().top, behavior: "smooth" });
+    b.textContent = h.matches("details.comp") ? h.dataset.comp : h.textContent.trim().slice(0, 2).toUpperCase();
+    b.onclick = () => {
+      if (h.matches("details")) h.open = true;
+      rol.scrollTo({ top: rol.scrollTop + h.getBoundingClientRect().top - rol.getBoundingClientRect().top, behavior: "smooth" });
+    };
     alvo.appendChild(b);
   }
 }
@@ -536,6 +667,10 @@ async function mostrar(caminho) {
   notasHorizontais(c);
   anotarNegritos(c);
   anotarC4(c);
+  justificarTranscricao(c);
+  sanfonasSubsecoes(c);
+  sanfonaLeituras(c);
+  sanfonasCompetencias(c);
   pillsCompetencias(c);
   document.getElementById("rolagem").scrollTop = 0;
   marcarAtivo(caminho);
@@ -605,6 +740,32 @@ async function listar(idUl) {
     ul.appendChild(li);
   }
 }
+
+// Busca na sidebar: qualquer termo do nome do arquivo (número, tipo, data, aluno, tema), sem acento e sem diferenciar maiúsculas.
+// Vários termos: todos precisam aparecer (em qualquer ordem).
+const busca = document.getElementById("busca");
+const normBusca = t => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[_\-.]+/g, " ");
+function filtrarBusca() {
+  const termos = normBusca(busca.value).split(/\s+/).filter(Boolean);
+  const sanfonas = [...document.querySelectorAll("#sidebar details")];
+  let total = 0;
+  for (const d of sanfonas) {
+    let achou = 0;
+    for (const a of d.querySelectorAll("a")) {
+      const nome = (a.dataset.caminho || a.textContent).split("/").pop().replace(/\.[^.]+$/, "");
+      const ok = termos.every(t => normBusca(nome).includes(t));
+      a.parentElement.classList.toggle("sem-busca", !ok);
+      if (ok) achou++;
+    }
+    d.classList.toggle("sem-resultado", termos.length > 0 && !achou);
+    total += achou;
+  }
+  document.getElementById("msg-busca").classList.toggle("mostrar", termos.length > 0 && !total);
+  const visiveis = sanfonas.filter(d => !d.classList.contains("sem-resultado"));
+  if (termos.length && visiveis.length && !visiveis.some(d => d.open)) visiveis[0].open = true;
+}
+busca.addEventListener("input", filtrarBusca);
+busca.addEventListener("keydown", e => { if (e.key === "Escape" && busca.value) { busca.value = ""; filtrarBusca(); } });
 
 Promise.all([
   listar("lista-redacoes"),
