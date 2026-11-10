@@ -4,7 +4,9 @@
 
 **Data:** 2026-11-09
 
-**Status:** `FINAL`
+## Status
+
+`FINAL`
 
 ## Texto transcrito
 
@@ -13,7 +15,7 @@ Em **negrito**: desvios gramaticais e problemas sintáticos contados na C1. Nume
 *P1*
 
 L1: De acordo com a pensadora brasileira Djamila Ribeiro, o primeiro passo a ser toma-  
-L2: do para solucionar uma questão é tirá-la da invisibilidade. Porém, no contexto atu-  
+L2: do para solucionar uma questão é **tira-la** da invisibilidade. Porém, no contexto atu-  
 L3: al do Brasil, a população enfrenta diversos desafios para a obtenção do acesso ao  
 L4: ensino superior, gerando graves impactos em suas vidas, como o aumento do desem-  
 L5: prego e da desinformação. Nesse sentido, essa problemática ocorre em virtude da  
@@ -54,10 +56,11 @@ L30: promover o acesso ao ensino superior no Brasil sejam minimizados.
 
 ## C1
 
-**Desvios gramaticais**
+### Desvios gramaticais
 
 | Parágrafo | Linha | Trecho | Tipo de erro | Correção sugerida |
 |---|---|---|---|---|
+| P1 | L2 | "tira-la" | Acentuação (verbo seguido de pronome) | "tirá-la" |
 | P2 | L10 | "apesar de existir políticas" | Concordância verbal | "apesar de existirem políticas" |
 | P2 | L14 | "adentrar-se" | Emprego de pronome (verbo transitivo direto) | "adentrar" |
 | P3 | L21 | "optam seguir" | Regência | "optam por seguir" |
@@ -65,9 +68,9 @@ L30: promover o acesso ao ensino superior no Brasil sejam minimizados.
 | P3 | L25 | "impecílio" | Ortografia | "empecilho" |
 | P4 | L28 | "edução" | Ortografia | "educação" |
 
-Total: 6 (P2 2, P3 3, P4 1). Nenhum desvio se repete.
+Total: 7 (P1 1, P2 2, P3 3, P4 1). Nenhum desvio se repete.
 
-**Problemas sintáticos**
+### Problemas sintáticos
 
 | Parágrafo | Linha | Trecho | Tipo de erro | Correção sugerida |
 |---|---|---|---|---|
@@ -76,7 +79,7 @@ Total: 6 (P2 2, P3 3, P4 1). Nenhum desvio se repete.
 
 Total: 2 (P2 1, P3 1).
 
-**Raciocínio:** 6 desvios gramaticais correspondem ao nível 120; 2 problemas sintáticos correspondem ao nível 160. Níveis adjacentes: adotei o inferior.
+**Raciocínio:** 7 desvios gramaticais, espalhados por todos os parágrafos, correspondem ao nível 120 (nenhum parágrafo chega a 6 desvios, que seria o nível 80); 2 problemas sintáticos correspondem ao nível 160. Níveis adjacentes: adotei o inferior.
 
 **Nota: 120**
 
@@ -132,11 +135,14 @@ Em "conciliar a faculdade com o trabalho... não se tem apoio e nem auxílio vin
 
 **Conectivos interfrasais:** P1: "Porém", "Nesse sentido" (2). P2: "Entretanto", "Assim" (inválido, ver abaixo), "Ademais" (3). P3: "pois", "Somado a isso", "Contudo" (inválido, ver abaixo) (3). P4: "Para isso", "como por exemplo", "a fim de que" (3).
 
-**Repetição:** nenhum conectivo se repete 3 ou mais vezes.
+**Repetição:** a retomada "isso" aparece 3 vezes, em "Além disso" (L17), "Somado a isso" (L20) e "Para isso" (L26). Nenhum outro conectivo se repete 3 ou mais vezes.
 
 **Usos inadequados:** "Assim, evidenciando que" (P2, L9) não conclui nada do que veio antes. "Contudo" (P3, L24) não se opõe à frase anterior.
 
-**Raciocínio:** há 2 transições válidas e 2 ou mais conectivos interfrasais por parágrafo, mas o P1→P2 não tem conectivo, e dois conectivos foram mal empregados.
+**Raciocínio:** há 2 transições válidas e 2 ou mais conectivos interfrasais por parágrafo, mas o P1→P2 não tem conectivo, dois conectivos foram mal empregados e "isso" se repete 3 vezes. Por isso a nota é 160.
+
+P3, P4 - **repetição de "isso"**.  
+Em "isso" (L17, L20, L26) --> Notei que você repetiu a retomada "isso" 3 vezes ("Além disso", "Somado a isso", "Para isso"). Substitua-a por um sinônimo como "ademais", "somado a esse quadro" ou "diante desse cenário".
 
 P2, L9-10 - **"Assim" sem conclusão**.  
 Em "Assim, evidenciando que apesar de existir políticas auxiliares" --> Troque por "Dessa forma, evidencia-se que" ou comece uma nova frase com sujeito e verbo.
@@ -180,11 +186,12 @@ Em "Contudo, para a vida de alguns, a educação pode ser atribuída como um imp
 
 1. **C2 (até +80):** trabalhe um repertório que esteja ligado a um argumento, por exemplo retomando Djamila Ribeiro no P2 para mostrar por que o problema do acesso ainda é invisível.
 2. **C3 (até +40):** desenvolva as consequências da introdução (P1, L4-5) e inclua na proposta uma medida para o P3 (trabalho e apoio das instituições).
-3. **C1 (até +40):** corrija regência e ortografia (P3, L21 e L24-25; P4, L28).
+3. **C1 (até +40):** corrija acentuação, regência e ortografia (P1, L2; P3, L21 e L24-25; P4, L28). Na C4, varie a retomada "isso" (L17, L20, L26).
 
 ## Leituras incertas
 
 | Parágrafo | Linha | Trecho | Leitura adotada | Alternativa possível | Muda a nota? |
 |---|---|---|---|---|---|
+| P1 | L2 | "é tira-la da invisibilidade" | "tira-la", sem acento | "tirá-la" | Sim (C1) |
 | P4 | L28 | "edução" | "edução", sem "ca" | "educação" | Sim (C1) |
 | P3 | L25 | "impecílio" | "impecílio" | "impedimento" | Sim (C1) |

@@ -370,7 +370,7 @@ function pillsCompetencias(c) {
   topo.type = "button"; topo.className = "topo"; topo.textContent = "↑ Topo";
   topo.onclick = () => rol.scrollTo({ top: 0, behavior: "smooth" });
   alvo.appendChild(topo);
-  const hs = [...c.querySelectorAll("h2")].filter(h => /^C[1-5]\b/i.test(h.textContent.trim()));
+  const hs = [...c.querySelectorAll("h2, h3")].filter(h => /^C[1-5]\b/i.test(h.textContent.trim()));
   for (const h of hs) {
     const b = document.createElement("button");
     b.type = "button";
