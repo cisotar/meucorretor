@@ -42,7 +42,16 @@
   #sidebar summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; }
   #sidebar summary::-webkit-details-marker { display: none; }
   #sidebar summary::after { content: "›"; transition: transform .2s; color: var(--muted); font-size: 1.2rem; }
-  #sidebar details[open] summary::after { transform: rotate(90deg); }
+  #sidebar details[open] > summary::after { transform: rotate(90deg); }
+  /* Sanfonas de tema dentro de "Redações" */
+  #sidebar details.tema-grupo { margin: 0 .4rem .4rem; background: var(--surface-2); box-shadow: none; border-radius: 10px; }
+  #sidebar details.tema-grupo > summary { padding: .5rem .7rem; font-size: .85rem; gap: .5rem; }
+  #sidebar details.tema-grupo > summary .tit { flex: 1; overflow-wrap: anywhere; }
+  #sidebar details.tema-grupo > summary .qtd { flex: none; font-size: .72rem; color: var(--muted); background: var(--surface); border-radius: 999px; padding: 0 .5rem; }
+  #sidebar details.tema-grupo ul { padding: 0 .2rem .4rem; }
+  #lista-redacoes { padding-bottom: .1rem; }
+  #lista-redacoes a .tema { display: none; }
+  body.ocultar-lidas #lista-redacoes details.tema-grupo:not(:has(li:not(.conferida), li.atual)) { display: none; }
   #sidebar details ul { list-style: none; margin: 0; padding: 0 .4rem .5rem; }
   #sidebar details li a { display: flex; flex-direction: column; gap: .05rem; padding: .45rem .6rem; border-radius: 10px; color: var(--text);
                  text-decoration: none; font-size: .88rem; border-left: 3px solid transparent; }
@@ -117,6 +126,12 @@
   table.notas { margin: .8rem 0 1.2rem; } table.notas th, table.notas td { text-align: center; }
   table.notas td { font-size: 1.3rem; font-weight: 700; }
 
+  #conteudo strong.leg-amarelo { background: #e5d9a3; border-radius: 4px; padding: 0 .15rem; border-bottom: 2px solid #c9b45a; }
+  #conteudo mark.rep { cursor: help; color: inherit; border-radius: 4px; padding: 0 .15rem; }
+  #conteudo mark.rep-prod { background: #c6e2b9; border-bottom: 2px solid #5f9e48; }
+  #conteudo mark.rep-pert { background: #bfd8ef; border-bottom: 2px solid #4a86b8; }
+  #conteudo mark.rep-colet { background: #f9e4cb; border-bottom: 2px solid #e2a96a; }
+  #conteudo mark.rep-bolso { background: transparent; padding: 0; border-radius: 0; text-decoration: underline dotted 2px; text-underline-offset: 3px; }
   #conteudo mark.c4 { cursor: help; background: #e3b9cc; color: inherit; border-radius: 4px; padding: 0 .15rem; border-bottom: 2px solid #c0568a; }
   #conteudo strong[data-corr] { cursor: help; background: #e5d9a3; border-radius: 4px; padding: 0 .15rem; }
   #balao { position: fixed; z-index: 20; display: none; max-width: 340px; background: #4a515c; color: #eceef1; padding: .5rem .75rem;
@@ -177,7 +192,7 @@
   <input id="busca" type="search" placeholder="Buscar por nome, número, tema…" autocomplete="off" aria-label="Buscar redação">
   <button id="ocultar-lidas" type="button" aria-pressed="false" title="Esconder da lista as redações já lidas">Ocultar lidas<span class="estado">off</span></button>
   <p id="msg-busca">Nenhum resultado.</p>
-  <details name="sanfona" open><summary>Redações</summary><p id="msg-lidas">Todas as redações foram lidas.</p><ul id="lista-redacoes"></ul></details>
+  <details name="sanfona" open><summary>Redações</summary><p id="msg-lidas">Todas as redações foram lidas.</p><div id="lista-redacoes"></div></details>
   <details name="sanfona"><summary>Propostas</summary><ul id="lista-propostas" class="arq"></ul></details>
   <details name="sanfona"><summary>Agentes</summary><ul id="lista-agentes" class="arq"></ul></details>
 </aside>
@@ -282,13 +297,13 @@ function marcarAtivo(caminho) {
     const ativo = a.dataset.caminho === caminho;
     a.classList.toggle("ativo", ativo);
     a.parentElement.classList.toggle("atual", ativo);
-    if (ativo) a.closest("details").open = true;
+    if (ativo) for (let d = a.closest("details"); d; d = d.parentElement.closest("details")) d.open = true;
   });
 }
 
 // Uma sanfona aberta por vez (reforça o atributo name="sanfona" em navegadores antigos).
-document.querySelectorAll("#sidebar details").forEach(d => d.addEventListener("toggle", () => {
-  if (d.open) document.querySelectorAll("#sidebar details").forEach(o => { if (o !== d) o.open = false; });
+document.querySelectorAll("#sidebar > details").forEach(d => d.addEventListener("toggle", () => {
+  if (d.open) document.querySelectorAll("#sidebar > details").forEach(o => { if (o !== d) o.open = false; });
 }));
 
 // Pill "Ocultar lidas" (on/off, lembrado no navegador)
@@ -428,6 +443,9 @@ function linhaDe(el) {
 }
 
 function anotarNegritos(c) {
+  const legC1 = [...c.querySelectorAll("p")].find(p => /^\s*Em\s+negrito/i.test(p.textContent));
+  const sgC1 = legC1 && legC1.querySelector("strong");
+  if (sgC1) sgC1.classList.add("leg-amarelo");
   const rows = lerDesviosC1(c);
   const h = [...c.querySelectorAll("h2")].find(x => /texto transcrito/i.test(x.textContent));
   if (!rows.length || !h) return;
@@ -522,6 +540,80 @@ function anotarC4(c) {
     if (leg) leg.append(" Em ", Object.assign(document.createElement("mark"), { className: "c4", textContent: "rosa" }), ": falhas de coesão (C4).");
   }
 }
+
+
+// C2: destaca no texto transcrito os repertórios transcritos no comentário da C2
+// (rótulo em negrito + citação "> P1, L1-5: "trecho"")
+const REP_TIPOS = [
+  { re: /^repertório produtivo$/i, cls: "rep-prod", nome: "verde", leg: "repertório produtivo" },
+  { re: /^só repertório pertinente$/i, cls: "rep-pert", nome: "azul", leg: "repertório pertinente (não produtivo)" },
+  { re: /^repertório de bolso$/i, cls: "rep-bolso", nome: "sublinhado pontilhado", leg: "repertório de bolso" },
+  { re: /^apenas referências da coletânea$/i, cls: "rep-colet", nome: "laranja", leg: "referência da coletânea" },
+];
+function anotarRepertorios(c) {
+  const h2 = [...c.querySelectorAll("h2")].find(h => /^C2\b/i.test(h.textContent.trim()));
+  const ht = [...c.querySelectorAll("h2")].find(x => /texto transcrito/i.test(x.textContent));
+  if (!h2 || !ht) return;
+  const itens = [];
+  let tipo = null;
+  for (let e = h2.nextElementSibling; e && e.tagName !== "H2"; e = e.nextElementSibling) {
+    if (e.tagName === "P") {
+      const sg = e.querySelector(":scope > strong");
+      if (sg && norm0(e.textContent) === norm0(sg.textContent)) tipo = REP_TIPOS.find(t => t.re.test(sg.textContent.trim())) || null;
+      continue;
+    }
+    if (e.tagName !== "BLOCKQUOTE" || !tipo) continue;
+    const m = e.textContent.trim().match(/^(P\d+[^:"“]*?):\s*["“]([\s\S]*)["”]\s*$/);
+    if (!m) continue;
+    const ls = [...m[1].matchAll(/L(\d+)(?:\s*[-–]\s*L?(\d+))?/g)].map(l => [+l[1], +(l[2] || l[1])]);
+    for (const parte of m[2].split(/\.\.\.|…|\[\.\.\.\]/)) if (parte.trim().length > 1) itens.push({ txt: parte.trim(), linhas: ls, tipo });
+  }
+  if (!itens.length) return;
+  const esc = w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const usados = new Set();
+  for (let e = ht.nextElementSibling; e && e.tagName !== "H2"; e = e.nextElementSibling) {
+    if (e.tagName !== "P") continue;
+    const partes = [], walker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+    let full = "";
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      partes.push({ node: n, ini: full.length, fim: full.length + n.data.length });
+      full += n.data + " ";
+    }
+    const achados = [];
+    for (const it of itens) {
+      const re = new RegExp(it.txt.split(/\s+/).map(w => [...w].map(esc).join("(?:-\\s*L\\d+:\\s*)?")).join("\\s+(?:L\\d+:\\s*)?"), "gi");
+      for (const m of full.matchAll(re)) {
+        const ult = [...full.slice(0, m.index).matchAll(/L(\d+):/g)].pop();
+        const ln = ult ? +ult[1] : null;
+        if (it.linhas.length && ln != null && !it.linhas.some(([a, b]) => ln >= a - 1 && ln <= b + 1)) continue;
+        achados.push({ ini: m.index, fim: m.index + m[0].length, tipo: it.tipo });
+      }
+    }
+    achados.sort((a, b) => b.ini - a.ini);
+    let limite = Infinity;
+    for (const a of achados) {
+      if (a.fim > limite) continue;
+      limite = a.ini;
+      for (const pe of [...partes].reverse()) {
+        const ini = Math.max(a.ini, pe.ini), fim = Math.min(a.fim, pe.fim);
+        if (ini >= fim) continue;
+        let nodo = pe.node;
+        if (fim - pe.ini < nodo.data.length) nodo.splitText(fim - pe.ini);
+        if (ini - pe.ini > 0) nodo = nodo.splitText(ini - pe.ini);
+        const mk = document.createElement("mark");
+        mk.className = "rep " + a.tipo.cls; mk.dataset.corr = "Trecho transcrito no comentário da C2."; mk.dataset.tipo = "C2 · " + a.tipo.leg;
+        nodo.replaceWith(mk); mk.appendChild(nodo);
+        usados.add(a.tipo);
+      }
+    }
+  }
+  const leg = [...ht.parentNode.querySelectorAll("p")].find(p => /^\s*Em\s+negrito/i.test(p.textContent));
+  if (leg) for (const t of REP_TIPOS) if (usados.has(t)) {
+    const mk = Object.assign(document.createElement("mark"), { className: "rep " + t.cls, textContent: t.cls === "rep-bolso" ? "pontilhado" : t.nome });
+    leg.append(t.cls === "rep-bolso" ? " Sublinhado " : " Em ", mk, ": " + t.leg + " (C2).");
+  }
+}
+function norm0(t) { return t.replace(/\s+/g, " ").trim(); }
 
 
 // ---------- Estrutura da correção: sanfonas e texto justificado ----------
@@ -667,6 +759,7 @@ async function mostrar(caminho) {
   notasHorizontais(c);
   anotarNegritos(c);
   anotarC4(c);
+  anotarRepertorios(c);
   justificarTranscricao(c);
   sanfonasSubsecoes(c);
   sanfonaLeituras(c);
@@ -712,9 +805,24 @@ async function listarArquivos(pasta, idUl, ext) {
   }
 }
 
-async function listar(idUl) {
+// Redações agrupadas em sanfonas por tema; temas mais recentes (maior número) primeiro.
+async function listar(idLista) {
   const pasta = "correcoes";
-  const ul = document.getElementById(idUl);
+  const lista = document.getElementById(idLista);
+  const grupos = new Map();
+  const grupoDe = tema => {
+    if (!grupos.has(tema)) {
+      const d = document.createElement("details");
+      d.className = "tema-grupo";
+      const s = document.createElement("summary");
+      const t = document.createElement("span"); t.className = "tit"; t.textContent = tema.replace(/-/g, " ");
+      const q = document.createElement("span"); q.className = "qtd";
+      s.append(t, q);
+      d.append(s, document.createElement("ul"));
+      grupos.set(tema, d);
+    }
+    return grupos.get(tema);
+  };
   const nomes = await nomesDe(pasta);
   const arquivos = nomes.filter(h => h.endsWith(".md") && ["CC", "CS"].includes(h.split("_")[1])).sort();
   const conf = lerConferidas();
@@ -737,8 +845,14 @@ async function listar(idUl) {
     a.onclick = e => { e.preventDefault(); mostrar(caminho); };
     li.classList.toggle("conferida", conf.has(caminho));
     li.appendChild(a);
-    ul.appendChild(li);
+    grupoDe(m ? m[5] : "Outros").querySelector("ul").appendChild(li);
   }
+  const ordem = [...grupos.values()].reverse();
+  for (const d of ordem) {
+    d.querySelector(".qtd").textContent = d.querySelectorAll("li").length;
+    lista.appendChild(d);
+  }
+  if (ordem.length) ordem[0].open = true;
 }
 
 // Busca na sidebar: qualquer termo do nome do arquivo (número, tipo, data, aluno, tema), sem acento e sem diferenciar maiúsculas.
@@ -747,7 +861,12 @@ const busca = document.getElementById("busca");
 const normBusca = t => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[_\-.]+/g, " ");
 function filtrarBusca() {
   const termos = normBusca(busca.value).split(/\s+/).filter(Boolean);
-  const sanfonas = [...document.querySelectorAll("#sidebar details")];
+  const sanfonas = [...document.querySelectorAll("#sidebar > details")];
+  for (const d of document.querySelectorAll("#lista-redacoes details.tema-grupo")) {
+    const achou = [...d.querySelectorAll("a")].some(a => termos.every(t => normBusca(a.dataset.caminho.split("/").pop().replace(/\.md$/, "")).includes(t)));
+    d.classList.toggle("sem-resultado", termos.length > 0 && !achou);
+    if (termos.length && achou) d.open = true;
+  }
   let total = 0;
   for (const d of sanfonas) {
     let achou = 0;
