@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092909.jpg`
+
 **Observação:** o sobrenome na folha está pouco legível ("Viana" ou "Viena"); usei "Viana".
 
 **Status:** `FINAL`

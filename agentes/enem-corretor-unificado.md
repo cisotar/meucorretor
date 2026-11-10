@@ -429,7 +429,7 @@ Depois de salvar o arquivo da correção, e **só depois**, arquive o arquivo da
 - Se a redação foi enviada como **arquivo no disco** (foto, imagem, PDF), **mova-o** (`mv`, não copie) para a pasta **`redacoes/corrigidas/`** na raiz do projeto, criando a pasta se ela não existir. Mantenha o nome original do arquivo.
 - Redação em mais de um arquivo (páginas): mova todos.
 - Mova **apenas** o(s) arquivo(s) da redação corrigida. Nunca mova a proposta de redação, os materiais nem outras redações.
-- Se já existir um arquivo com o mesmo nome em `corrigidas/`, não sobrescreva: acrescente ` (2)`, ` (3)` etc. antes da extensão.
+- Se já existir um arquivo com o mesmo nome em `corrigidas/`, não sobrescreva: acrescente ` (2)`, ` (3)` etc. antes da extensão. O nome final tem de ser o mesmo registrado em **Arquivo da redação** no cabeçalho da correção (ver "Entrega em arquivo").
 - Se a redação não veio de arquivo (texto digitado ou colado, imagem anexada sem caminho no disco), não há o que arquivar.
 - Se a correção não foi salva, não arquive.
 - Em nota zero geral, arquive normalmente: a redação foi lida e corrigida.
@@ -574,7 +574,8 @@ Os dois modos salvam na mesma pasta, **`correcoes/`**, e o tipo de correção va
   - `tema`: versão curta e reconhecível do tema (ex.: `Maus-tratos aos animais`), também com hífen no lugar dos espaços (`Maus-tratos-aos-animais`).
   - Não use o caractere `#` (o Claude Code não permite mencioná-lo com @), espaços nem os caracteres `/ \ : * ? " < > |` no nome; remova-os ou troque-os por hífen.
   - Exemplo: `correcoes/0001_CC_2026-11-08_Carlos-Silva_Maus-tratos-aos-animais.md`
-- **Conteúdo:** comece com um cabeçalho de identificação (`# Correção – [Nome do aluno]`, seguido de **Tema:** e **Data:**, cada um em seu parágrafo, separados por linha em branco) e, em seguida, exatamente a estrutura do Formato de Saída do modo escolhido, na ordem indicada.
+- **Conteúdo:** comece com um cabeçalho de identificação (`# Correção – [Nome do aluno]`, seguido de **Tema:**, **Data:** e **Arquivo da redação:**, cada um em seu parágrafo, separados por linha em branco) e, em seguida, exatamente a estrutura do Formato de Saída do modo escolhido, na ordem indicada.
+  - **Arquivo da redação:** só o **nome** do arquivo lido (foto ou PDF), entre crases, sem o caminho, porque depois da correção ele é movido para `redacoes/corrigidas/` (ex.: `**Arquivo da redação:** \`IMG_20261109_092909.jpg\``). Use o nome que o arquivo terá em `corrigidas/`: se lá já houver um arquivo com o mesmo nome, escreva o nome com o ` (2)`, ` (3)` etc. que ele vai receber no arquivamento. Redação em mais de um arquivo: todos os nomes, separados por vírgula. Redação que não veio de arquivo (texto colado ou imagem sem caminho no disco): `**Arquivo da redação:** não se aplica (texto enviado no chat)`. As correções CC e CS da mesma redação trazem o mesmo nome.
   - **Modo A:** Status, `## Texto transcrito`, `## Leituras incertas` (logo depois da transcrição), análise por competência (cada uma terminando em sua nota), Grade de Notas, Dúvidas (se houver) e Plano de Melhoria.
   - **Modo B:** Status, `## Texto transcrito`, `## Leituras incertas` (logo depois da transcrição), `## C1` (com as duas tabelas), `## C2`, `## C3`, `## C4`, `## C5` (cada uma terminando em sua linha `**Nota: X**`), `## Notas` e, se houver, `## Dúvidas`.
 - **Arquivo já existente** (mesmo aluno, tema e data, mas outra redação): acrescente ` (2)`, ` (3)` etc. antes do `.md`.

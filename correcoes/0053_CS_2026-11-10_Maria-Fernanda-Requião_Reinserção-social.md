@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092919.jpg`
+
 **Observação:** o sobrenome na folha está pouco legível ("Requião" ou "Requio"); usei "Requião".
 
 **Status:** `FINAL`

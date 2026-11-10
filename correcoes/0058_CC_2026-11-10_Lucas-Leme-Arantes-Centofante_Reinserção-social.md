@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092930.jpg`
+
 **Observação:** o último sobrenome na folha está pouco legível ("Centofante" ou "Centofonte"); usei "Centofante".
 
 **Status:** `FINAL`

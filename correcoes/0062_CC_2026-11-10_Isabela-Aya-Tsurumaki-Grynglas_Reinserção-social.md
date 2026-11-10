@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092949.jpg`
+
 **Observação:** a linha 15 da folha está inteiramente rasurada; mantive a numeração da folha, e o P3 começa na linha 16.
 
 **Status:** `FINAL`

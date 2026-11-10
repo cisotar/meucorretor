@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092935.jpg`
+
 **Observação:** letra cursiva muito ligada; as leituras duvidosas que afetam a C1 estão na tabela de leituras incertas.
 
 **Status:** `FINAL`

@@ -183,12 +183,52 @@
   #modal button.primario:hover { background: #4a5ec0; }
   #modal button:disabled { opacity: .45; cursor: default; }
 
+  #veu { display: none; }
+  #fechar-menu { display: none; place-items: center; margin-left: auto; width: 34px; height: 34px; border: 1px solid var(--line);
+                 border-radius: 10px; background: var(--surface); font-size: 1rem; }
+
+  /* ---------- Celular: menu vira gaveta sobre o conteúdo ---------- */
+  @media (max-width: 760px) {
+    html, body, #area { height: 100dvh; }
+    #sidebar { position: fixed; top: 0; left: 0; z-index: 15; width: min(320px, 86vw); height: 100dvh; margin-left: 0;
+               transform: translateX(-105%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(40,48,60,.35); }
+    body.colapsada #sidebar { margin-left: 0; }
+    body.menu-aberto #sidebar { transform: none; }
+    #veu { display: block; position: fixed; inset: 0; z-index: 14; background: rgba(60,66,76,.45);
+           opacity: 0; pointer-events: none; transition: opacity .25s; }
+    body.menu-aberto #veu { opacity: 1; pointer-events: auto; }
+    #topo { padding: .5rem .6rem; gap: .4rem; }
+    #toggle, #pendentes, #home { padding: .35rem .7rem; }
+    #pills { margin-left: 0; padding-left: 0; border-left: 0; flex-wrap: wrap; width: 100%; }
+    #conteudo { margin: .6rem .5rem 0; padding: 1rem .9rem 1.2rem; overflow-wrap: break-word; }
+    #conteudo h1 { font-size: 1.35rem; }
+    #conteudo table { display: block; max-width: 100%; overflow-x: auto; }
+    /* Tabelas com rótulos viram cartões: uma linha por cartão, cada célula com o nome da coluna */
+    #conteudo table.cartoes { display: block; border: 0; border-radius: 0; overflow: visible; }
+    #conteudo table.cartoes thead { display: none; }
+    #conteudo table.cartoes tbody, #conteudo table.cartoes tr, #conteudo table.cartoes td { display: block; }
+    #conteudo table.cartoes tr { border: 1px solid var(--line); border-radius: 10px; margin-bottom: .6rem; background: var(--surface); overflow: hidden; }
+    #conteudo table.cartoes td { border-right: 0; padding: .35rem .7rem; }
+    #conteudo table.cartoes tr > td:last-child { border-bottom: 0; }
+    #conteudo table.cartoes td::before { content: attr(data-rotulo); display: block; font-size: .68rem; font-weight: 700;
+                                         text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    #conteudo table.notas { display: table; width: 100%; table-layout: fixed; }
+    table.notas th, table.notas td { padding: .4rem .15rem; }
+    table.notas th { font-size: .62rem; letter-spacing: 0; }
+    table.notas td { font-size: 1.05rem; }
+    #fechar-menu { display: grid; }
+    #conteudo details.bloco > summary { padding: .55rem .7rem; }
+    #conteudo details.bloco .corpo { padding: 0 .7rem .7rem; }
+    #conteudo p.transc .lt { text-align-last: left; }
+    #balao { max-width: calc(100vw - 16px); }
+  }
+
   ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
 </style>
 </head>
 <body>
 <aside id="sidebar">
-  <div class="marca"><div class="logo">C</div><h1>Correções</h1></div>
+  <div class="marca"><div class="logo">C</div><h1>Correções</h1><button id="fechar-menu" type="button" title="Fechar menu" aria-label="Fechar menu">✕</button></div>
   <input id="busca" type="search" placeholder="Buscar por nome, número, tema…" autocomplete="off" aria-label="Buscar redação">
   <button id="ocultar-lidas" type="button" aria-pressed="false" title="Esconder da lista as redações já lidas">Ocultar lidas<span class="estado">off</span></button>
   <p id="msg-busca">Nenhum resultado.</p>
@@ -196,6 +236,7 @@
   <details name="sanfona"><summary>Propostas</summary><ul id="lista-propostas" class="arq"></ul></details>
   <details name="sanfona"><summary>Agentes</summary><ul id="lista-agentes" class="arq"></ul></details>
 </aside>
+<div id="veu"></div>
 <div id="area">
   <div id="topo"><button id="toggle" title="Mostrar/ocultar menu">☰ Menu</button>
   <button id="home" title="Voltar ao início">⌂ Home</button>
@@ -290,7 +331,34 @@ function abrirPendentes(forcar) {
   modal.classList.add("aberto");
 }
 
-document.getElementById("toggle").onclick = () => document.body.classList.toggle("colapsada");
+// Menu: no computador, recolhe a barra lateral (e lembra a escolha); no celular, abre como gaveta sobre o conteúdo.
+const telaPequena = matchMedia("(max-width: 760px)");
+function atualizarBotaoMenu() {
+  const aberto = telaPequena.matches ? document.body.classList.contains("menu-aberto") : !document.body.classList.contains("colapsada");
+  const b = document.getElementById("toggle");
+  b.textContent = aberto ? "✕ Menu" : "☰ Menu";
+  b.setAttribute("aria-expanded", String(aberto));
+}
+function alternarMenu() {
+  if (telaPequena.matches) document.body.classList.toggle("menu-aberto");
+  else {
+    const col = document.body.classList.toggle("colapsada");
+    try { localStorage.setItem("menuRecolhido", col ? "1" : "0"); } catch {}
+  }
+  atualizarBotaoMenu();
+}
+function fecharMenuCelular() {
+  if (!document.body.classList.contains("menu-aberto")) return;
+  document.body.classList.remove("menu-aberto");
+  atualizarBotaoMenu();
+}
+try { if (localStorage.getItem("menuRecolhido") === "1") document.body.classList.add("colapsada"); } catch {}
+document.getElementById("toggle").onclick = alternarMenu;
+document.getElementById("veu").onclick = fecharMenuCelular;
+document.getElementById("fechar-menu").onclick = fecharMenuCelular;
+document.addEventListener("keydown", e => { if (e.key === "Escape") fecharMenuCelular(); });
+telaPequena.addEventListener("change", () => { document.body.classList.remove("menu-aberto"); atualizarBotaoMenu(); });
+atualizarBotaoMenu();
 
 function marcarAtivo(caminho) {
   document.querySelectorAll("#sidebar a").forEach(a => {
@@ -327,6 +395,7 @@ try { aplicarOcultar(localStorage.getItem("ocultarLidas") === "1"); } catch { ap
 
 // Home: volta à tela inicial
 document.getElementById("home").onclick = () => {
+  fecharMenuCelular();
   document.getElementById("conteudo").innerHTML = "<em>Selecione um arquivo.</em>";
   document.getElementById("pills").innerHTML = "";
   document.getElementById("rolagem").scrollTop = 0;
@@ -357,6 +426,7 @@ function linksIndice(c) {
 
 // Propostas e agentes: md é renderizado; pdf e imagem aparecem na própria página
 async function abrirArquivo(caminho) {
+  fecharMenuCelular();
   const c = document.getElementById("conteudo");
   const url = caminho.split("/").map(encodeURIComponent).join("/");
   document.getElementById("pills").innerHTML = "";
@@ -364,6 +434,7 @@ async function abrirArquivo(caminho) {
   if (/\.md$/i.test(caminho)) {
     c.innerHTML = marked.parse(await (await fetch(url)).text());
     linksIndice(c);
+    rotularTabelas(c);
   } else {
     const link = document.createElement("p");
     const a = document.createElement("a");
@@ -752,11 +823,23 @@ function pillsCompetencias(c) {
   }
 }
 
+// Tabelas (exceto a de notas): cada célula recebe o nome da coluna, usado no celular para mostrar a linha como cartão.
+function rotularTabelas(c) {
+  for (const t of c.querySelectorAll("table:not(.notas)")) {
+    const cab = [...t.querySelectorAll("thead th")].map(th => th.textContent.trim());
+    if (cab.length < 3) continue;
+    t.classList.add("cartoes");
+    for (const tr of t.querySelectorAll("tbody tr")) [...tr.children].forEach((td, i) => { td.dataset.rotulo = cab[i] || ""; });
+  }
+}
+
 async function mostrar(caminho) {
+  fecharMenuCelular();
   const r = await fetch(caminho.split("/").map(encodeURIComponent).join("/"));
   const c = document.getElementById("conteudo");
   c.innerHTML = marked.parse(await r.text());
   notasHorizontais(c);
+  rotularTabelas(c);
   anotarNegritos(c);
   anotarC4(c);
   anotarRepertorios(c);

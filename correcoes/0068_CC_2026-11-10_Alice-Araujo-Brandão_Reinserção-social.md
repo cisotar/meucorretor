@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_093031.jpg`
+
 **Observação:** a aluna escreve o "s" espelhado, o "r" parecido com o "v" e o "A" maiúsculo no formato do minúsculo; tratei esses traços como característicos da letra, não como erros.
 
 **Status:** `FINAL`

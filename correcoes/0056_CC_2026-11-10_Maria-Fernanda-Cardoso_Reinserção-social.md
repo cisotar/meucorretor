@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092924.jpg`
+
 **Observação:** a aluna traça o "r" parecido com o "s" (ex.: "brasileira"); li como "r" sempre que o contexto pede, sem contar como erro.
 
 **Status:** `FINAL`

@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_093021.jpg`
+
 **Status:** `FINAL`
 
 ## Texto transcrito

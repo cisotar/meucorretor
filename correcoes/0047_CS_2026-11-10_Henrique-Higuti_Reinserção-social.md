@@ -4,6 +4,8 @@
 
 **Data:** 2026-11-10
 
+**Arquivo da redação:** `IMG_20261109_092903.jpg`
+
 **Observação:** o sobrenome na folha está pouco legível ("Higuti" ou "Higut"); usei "Higuti".
 
 **Status:** `FINAL`
