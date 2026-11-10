@@ -6,83 +6,152 @@
 <title>Correções</title>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
+  :root {
+    --bg:        #cbcfd5;   /* fundo da página */
+    --bg-side:   #b4b9c1;   /* sidebar */
+    --surface:   #d4d7dc;   /* cards */
+    --surface-2: color-mix(in srgb, var(--surface) 60%, white);   /* hover */
+    --line:      color-mix(in srgb, var(--bg) 85%, black);
+    --text:      #272c34;
+    --muted:     #4e5560;
+    --accent:    #5a6fd6;
+    --accent-bg: #cfd6f3;
+    --ok:        #3f8f63;
+    --danger:    #c85a5a;
+    --cc:        #5a6fd6;  --cc-bg: #cdd4f2;
+    --cs:        #b27a2c;  --cs-bg: #ecdcc0;
+    --radius:    14px;
+    --shadow:    0 1px 2px rgba(40,48,60,.10), 0 6px 18px rgba(40,48,60,.08);
+  }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
-  body { font-family: sans-serif; line-height: 1.5; overflow: hidden; display: flex; }
+  body { font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif; line-height: 1.6; font-size: 15px;
+         background: var(--bg); color: var(--text); overflow: hidden; display: flex; }
+  button { font: inherit; color: inherit; cursor: pointer; }
 
-  #sidebar { width: 320px; flex: none; height: 100vh; overflow-y: auto; border-right: 1px solid #ccc;
-             background: #f6f6f6; padding: .75rem; transition: margin-left .2s; }
+  /* ---------- Sidebar ---------- */
+  #sidebar { width: 320px; flex: none; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line);
+             background: var(--bg-side); padding: 1.1rem .9rem; transition: margin-left .25s; }
   body.colapsada #sidebar { margin-left: -320px; }
-  #sidebar h1 { font-size: 1.1rem; margin: 0 0 .75rem; }
+  #sidebar .marca { display: flex; align-items: center; gap: .6rem; margin: 0 .3rem 1rem; }
+  #sidebar .logo { width: 34px; height: 34px; border-radius: 10px; background: var(--accent); color: #eef0ff;
+                   display: grid; place-items: center; font-weight: 700; box-shadow: var(--shadow); }
+  #sidebar h1 { font-size: 1.1rem; margin: 0; letter-spacing: -.01em; }
 
-  details { margin-bottom: .5rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
-  summary { cursor: pointer; padding: .5rem .6rem; font-weight: bold; }
-  details ul { list-style: none; margin: 0; padding: 0 0 .4rem; }
-  details li a { display: block; padding: .25rem .8rem; color: #222; text-decoration: none; font-size: .9rem; }
-  details li a:hover { background: #eee; }
-  details li a { display: flex; flex-direction: column; gap: .05rem; }
+  details { margin-bottom: .6rem; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "›"; transition: transform .2s; color: var(--muted); font-size: 1.2rem; }
+  details[open] summary::after { transform: rotate(90deg); }
+  details ul { list-style: none; margin: 0; padding: 0 .4rem .5rem; }
+  details li a { display: flex; flex-direction: column; gap: .05rem; padding: .45rem .6rem; border-radius: 10px; color: var(--text);
+                 text-decoration: none; font-size: .88rem; border-left: 3px solid transparent; }
+  details li a:hover { background: var(--surface-2); }
+  details li a.ativo { background: var(--accent-bg); border-left-color: var(--accent); }
   details li a .linha1 { display: flex; align-items: baseline; gap: .45rem; }
-  details li a .num { color: #222; font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
+  details li a .num { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
   details li a .nome { font-weight: 600; overflow-wrap: anywhere; }
-  details li a .tag { margin-left: auto; flex: none; font-size: .65rem; font-weight: bold; padding: 0 .35rem; border-radius: 3px; background: #e3e3e3; color: #555; }
-  details li a .tag.CC { background: #d8e6ff; color: #1f4a9a; } details li a .tag.CS { background: #ffe9c7; color: #8a5a00; }
-  details li a .tema { color: #777; font-size: .75rem; }
-  details li a.ativo { background: #dde8ff; font-weight: bold; }
+  details li a .tag { margin-left: auto; flex: none; font-size: .62rem; font-weight: 700; padding: .05rem .4rem; border-radius: 6px; letter-spacing: .04em; background: var(--line); color: var(--muted); }
+  details li a .tag.CC { background: var(--cc-bg); color: var(--cc); } details li a .tag.CS { background: var(--cs-bg); color: var(--cs); }
+  details li a .tema { color: var(--muted); font-size: .75rem; }
+  details ul.arq li a { font-weight: 600; overflow-wrap: anywhere; }
+  details li.conferida a .linha1::after { content: "✓"; color: var(--ok); font-weight: bold; flex: none; }
 
+  #ocultar-lidas { display: inline-flex; align-items: center; margin: 0 0 .9rem; padding: .25rem .85rem; border: 1px solid var(--line);
+                   border-radius: 999px; background: var(--surface); color: var(--muted); font-size: .8rem; font-weight: 600; cursor: pointer; }
+  #ocultar-lidas:hover { background: var(--surface-2); }
+  #ocultar-lidas[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #eef0ff; }
+  #ocultar-lidas .estado { margin-left: .3rem; opacity: .85; }
+  body.ocultar-lidas #lista-redacoes li.conferida:not(.atual) { display: none; }
+  #msg-lidas { display: none; margin: .2rem .8rem .5rem; color: var(--muted); font-size: .85rem; }
+  body.ocultar-lidas.todas-lidas #msg-lidas { display: block; }
+
+  /* ---------- Área principal ---------- */
   #area { flex: 1; min-width: 0; height: 100vh; display: flex; flex-direction: column; }
-  #toggle { flex: none; align-self: flex-start; margin: .5rem; padding: .3rem .7rem; cursor: pointer; }
-  #rolagem { flex: 1; overflow-y: auto; }
-  #conteudo { padding: 0 1.5rem 2rem; max-width: 1000px; margin: 0 auto; }
-  table.notas { margin: .5rem 0 1rem; } table.notas th, table.notas td { text-align: center; }
-  details li.conferida a .linha1::after { content: "✓"; color: #2a8a2a; font-weight: bold; flex: none; }
-  #modal { position: fixed; inset: 0; background: rgba(20,24,40,.5); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 10; }
-  #modal.aberto { display: flex; }
-  #modal .caixa { background: #fff; border-radius: 12px; width: min(600px, 92vw); max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,.35); overflow: hidden; }
-  #modal .cab { padding: 1rem 1.3rem .8rem; border-bottom: 1px solid #e6e6ee; display: flex; align-items: center; gap: .6rem; }
-  #modal h2 { margin: 0; font-size: 1.15rem; }
-  #modal .contagem { background: #e8eeff; color: #1f4a9a; font-weight: 700; font-size: .8rem; border-radius: 999px; padding: .05rem .6rem; }
-  #modal .lista { overflow-y: auto; padding: .4rem .8rem .8rem; }
-  #modal h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; margin: .9rem .5rem .3rem; color: #667; }
-  #modal .lista a { display: flex; align-items: baseline; gap: .55rem; padding: .45rem .6rem; color: #222; text-decoration: none; border-radius: 6px; font-size: .92rem; }
-  #modal .lista a:hover { background: #eef3ff; }
-  #modal .lista .num { font-weight: 600; font-variant-numeric: tabular-nums; flex: none; }
-  #modal .lista .nome { font-weight: 600; }
-  #modal .lista .tema { color: #777; font-size: .8rem; margin-left: auto; text-align: right; }
-  #modal .vazio { text-align: center; color: #667; padding: 2rem 1rem; }
-  #modal .rodape { padding: .75rem 1.3rem; border-top: 1px solid #e6e6ee; display: flex; justify-content: space-between; gap: .5rem; background: #fafafd; }
-  #modal button { padding: .4rem 1rem; cursor: pointer; border-radius: 6px; border: 1px solid #bbc; background: #fff; font-size: .88rem; }
-  #modal button:hover { background: #eef3ff; }
-  #modal button.primario { background: #2f5fd0; border-color: #2f5fd0; color: #fff; }
-  #modal button.primario:hover { background: #244bab; }
-  #modal button:disabled { opacity: .45; cursor: default; }
-  table { border-collapse: collapse; } td, th { border: 1px solid #aaa; padding: 4px 8px; }
-  #conteudo { padding-bottom: 85vh; }
-  #topo { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .5rem .75rem; border-bottom: 1px solid #ddd; background: #fafafd; }
-  #toggle, #pendentes { margin: 0; align-self: auto; padding: .35rem .8rem; border: 1px solid #bbc; background: #fff; border-radius: 6px; font-size: .88rem; cursor: pointer; }
-  #toggle:hover, #pendentes:hover { background: #eef3ff; }
-  #pendentes .badge { display: inline-block; margin-left: .35rem; min-width: 1.3rem; padding: 0 .4rem; border-radius: 999px; background: #d64545; color: #fff; font-size: .72rem; font-weight: 700; text-align: center; }
-  #pendentes .badge.zero { background: #2a8a2a; }
-  #pills { display: inline-flex; gap: .35rem; margin-left: .5rem; padding-left: .85rem; border-left: 1px solid #ccd; }
+  #topo { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .7rem 1.1rem;
+          background: color-mix(in srgb, var(--bg) 80%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  #toggle, #pendentes, #home { margin: 0; align-self: auto; padding: .4rem .9rem; border: 1px solid var(--line); background: var(--surface);
+                               border-radius: 10px; font-size: .86rem; font-weight: 500; cursor: pointer; }
+  #toggle:hover, #pendentes:hover, #home:hover { background: var(--surface-2); }
+  #pendentes .badge { display: inline-block; margin-left: .4rem; min-width: 1.3rem; padding: 0 .4rem; border-radius: 999px;
+                      background: var(--danger); color: #f4eeee; font-size: .72rem; font-weight: 700; text-align: center; }
+  #pendentes .badge.zero { background: var(--ok); }
+  #pills { display: inline-flex; gap: .35rem; margin-left: .4rem; padding-left: .9rem; border-left: 1px solid var(--line); }
   #pills:empty { display: none; }
-  #pills button { border: 1px solid #99a; background: #f0f2ff; border-radius: 999px; padding: .15rem .75rem; font-size: .8rem; font-weight: 600; color: #334; cursor: pointer; }
-  #pills button:hover { background: #dde8ff; }
-  #pills button.topo { background: #334; border-color: #334; color: #fff; }
-  #pills button.topo:hover { background: #556; }
-  #conteudo mark.c4 { cursor: help; background: #ffc4de; color: inherit; border-radius: 2px; border-bottom: 2px solid #e0559a; }
-  #conteudo strong[data-corr] { cursor: help; background: #fff1b8; border-radius: 2px; }
-  #balao { position: fixed; z-index: 20; display: none; max-width: 340px; background: #222; color: #fff; padding: .4rem .6rem;
-           border-radius: 6px; font-size: .85rem; line-height: 1.35; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
-  #balao small { display: block; color: #bbb; margin-bottom: .15rem; }
+  #pills button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: .15rem .75rem; font-size: .8rem; font-weight: 600; color: var(--muted); }
+  #pills button:hover { background: var(--accent-bg); color: var(--accent); border-color: var(--accent); }
+  #pills button.topo { background: var(--text); border-color: var(--text); color: var(--surface); }
+  #pills button.topo:hover { background: #3d444f; color: var(--surface); }
+
+  #rolagem { flex: 1; overflow-y: auto; }
+  #rolagem::after { content: ""; display: block; height: 85vh; }     /* folga para rolar até o fim */
+  #conteudo { max-width: 960px; margin: 1.5rem auto 0; padding: 1.8rem 2rem 2rem; background: var(--surface);
+              border-radius: var(--radius); box-shadow: var(--shadow); }
+  #conteudo h1 { font-size: 1.7rem; letter-spacing: -.02em; margin-top: 0; }
+  #conteudo h2 { font-size: 1.2rem; margin-top: 2rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); }
+  #conteudo h3 { font-size: 1.02rem; }
+  #conteudo hr { border: 0; border-top: 1px solid var(--line); margin: 1.5rem 0; }
+  #conteudo blockquote { margin: 1rem 0; padding: .7rem 1rem; border-left: 3px solid var(--accent); background: var(--bg); border-radius: 0 10px 10px 0; color: var(--muted); }
+  #conteudo blockquote p { margin: 0; }
+  #conteudo code { background: var(--bg); border-radius: 5px; padding: .08rem .35rem; font-size: .88em; }
+  #conteudo pre { background: var(--bg); border-radius: 10px; padding: .8rem 1rem; overflow-x: auto; }
+  #conteudo pre code { padding: 0; background: none; }
+  #conteudo a { color: var(--accent); }
+  #conteudo a.ind { text-decoration: none; }
+  #conteudo a.ind code { color: var(--accent); background: var(--accent-bg); cursor: pointer; }
+  #conteudo a.ind:hover code { background: color-mix(in srgb, var(--accent-bg) 70%, var(--accent)); text-decoration: underline; }
+  #conteudo iframe.doc { width: 100%; height: 80vh; border: 1px solid var(--line); border-radius: 10px; }
+  #conteudo img.doc { max-width: 100%; height: auto; border-radius: 10px; }
+
+  table { border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: .9rem; margin: .8rem 0; }
+  td, th { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: .45rem .8rem; text-align: left; vertical-align: top; }
+  tr > :last-child { border-right: 0; } tbody tr:last-child > *, table tr:last-child > td { border-bottom: 0; }
+  th { background: var(--bg); font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  table.notas { margin: .8rem 0 1.2rem; } table.notas th, table.notas td { text-align: center; }
+  table.notas td { font-size: 1.3rem; font-weight: 700; }
+
+  #conteudo mark.c4 { cursor: help; background: #e3b9cc; color: inherit; border-radius: 4px; padding: 0 .15rem; border-bottom: 2px solid #c0568a; }
+  #conteudo strong[data-corr] { cursor: help; background: #e5d9a3; border-radius: 4px; padding: 0 .15rem; }
+  #balao { position: fixed; z-index: 20; display: none; max-width: 340px; background: #4a515c; color: #eceef1; padding: .5rem .75rem;
+           border-radius: 10px; font-size: .85rem; line-height: 1.35; pointer-events: none; box-shadow: 0 8px 24px rgba(40,48,60,.3); }
+  #balao small { display: block; color: #b9bfc9; margin-bottom: .15rem; }
+
+  /* ---------- Modal ---------- */
+  #modal { position: fixed; inset: 0; background: rgba(90,98,110,.45); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 10; }
+  #modal.aberto { display: flex; }
+  #modal .caixa { background: var(--surface); border-radius: 18px; width: min(600px, 92vw); max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 24px 60px rgba(40,48,60,.35); overflow: hidden; }
+  #modal .cab { padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: .6rem; }
+  #modal h2 { margin: 0; font-size: 1.1rem; }
+  #modal .contagem { background: var(--accent-bg); color: var(--accent); font-weight: 700; font-size: .8rem; border-radius: 999px; padding: 0 .6rem; }
+  #modal .lista { overflow-y: auto; padding: .4rem .8rem .8rem; }
+  #modal h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; margin: .9rem .5rem .3rem; color: var(--muted); }
+  #modal .lista a { display: flex; align-items: baseline; gap: .55rem; padding: .45rem .6rem; color: var(--text); text-decoration: none; border-radius: 10px; font-size: .92rem; }
+  #modal .lista a:hover { background: var(--surface-2); }
+  #modal .lista .num { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); flex: none; }
+  #modal .lista .nome { font-weight: 600; }
+  #modal .lista .tema { color: var(--muted); font-size: .8rem; margin-left: auto; text-align: right; }
+  #modal .vazio { text-align: center; color: var(--muted); padding: 2rem 1rem; }
+  #modal .rodape { padding: .8rem 1.4rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: .5rem; background: var(--bg-side); }
+  #modal button { padding: .4rem 1rem; cursor: pointer; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: .88rem; }
+  #modal button:hover { background: var(--surface-2); }
+  #modal button.primario { background: var(--accent); border-color: var(--accent); color: #eef0ff; }
+  #modal button.primario:hover { background: #4a5ec0; }
+  #modal button:disabled { opacity: .45; cursor: default; }
+
+  ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
 </style>
 </head>
 <body>
 <aside id="sidebar">
-  <h1>Correções</h1>
-  <details open><summary>Correções</summary><ul id="lista-correcoes"></ul></details>
-  <details><summary>Correções simplificadas</summary><ul id="lista-simplificadas"></ul></details>
+  <div class="marca"><div class="logo">C</div><h1>Correções</h1></div>
+  <button id="ocultar-lidas" type="button" aria-pressed="false" title="Esconder da lista as redações já lidas">Ocultar lidas<span class="estado">off</span></button>
+  <details name="sanfona" open><summary>Redações</summary><p id="msg-lidas">Todas as redações foram lidas.</p><ul id="lista-redacoes"></ul></details>
+  <details name="sanfona"><summary>Propostas</summary><ul id="lista-propostas" class="arq"></ul></details>
+  <details name="sanfona"><summary>Agentes</summary><ul id="lista-agentes" class="arq"></ul></details>
 </aside>
 <div id="area">
   <div id="topo"><button id="toggle" title="Mostrar/ocultar menu">☰ Menu</button>
+  <button id="home" title="Voltar ao início">⌂ Home</button>
   <button id="pendentes" title="Redações ainda não conferidas">Pendentes<span class="badge" id="badge"></span></button>
   <span id="pills"></span></div>
   <div id="rolagem"><main id="conteudo"><em>Selecione um arquivo.</em></main></div>
@@ -100,9 +169,9 @@
 
 <script>
 // Lista vem de correcoes/index.json (rode gerar-indice.py ao adicionar correções).
-const pastas = [
-  ["CC", "Correções completas (CC)", "lista-correcoes"],
-  ["CS", "Correções simplificadas (CS)", "lista-simplificadas"],
+const grupos = [
+  ["CC", "Correções completas (CC)"],
+  ["CS", "Correções simplificadas (CS)"],
 ];
 
 const CHAVE = "conferidas";
@@ -120,7 +189,7 @@ modal.onclick = e => { if (e.target === modal) fecharModal(); };
 document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModal(); });
 document.getElementById("pendentes").onclick = () => abrirPendentes(true);
 
-function todasLinks() { return [...document.querySelectorAll("#sidebar li a")]; }
+function todasLinks() { return [...document.querySelectorAll("#lista-redacoes a")]; }
 
 function atualizarBadge() {
   const conf = lerConferidas();
@@ -128,6 +197,7 @@ function atualizarBadge() {
   const b = document.getElementById("badge");
   b.textContent = n || "✓";
   b.classList.toggle("zero", !n);
+  atualizarTodasLidas();
 }
 
 function marcarTodas() {
@@ -144,8 +214,8 @@ function abrirPendentes(forcar) {
   const alvo = document.getElementById("modal-lista");
   alvo.innerHTML = "";
   let total = 0;
-  for (const [label, titulo, idUl] of pastas) {
-    const itens = [...document.querySelectorAll("#" + idUl + " a")].filter(a => !conf.has(a.dataset.caminho));
+  for (const [label, titulo] of grupos) {
+    const itens = todasLinks().filter(a => a.dataset.label === label && !conf.has(a.dataset.caminho));
     if (!itens.length) continue;
     total += itens.length;
     const h = document.createElement("h3");
@@ -179,9 +249,88 @@ function marcarAtivo(caminho) {
   document.querySelectorAll("#sidebar a").forEach(a => {
     const ativo = a.dataset.caminho === caminho;
     a.classList.toggle("ativo", ativo);
+    a.parentElement.classList.toggle("atual", ativo);
     if (ativo) a.closest("details").open = true;
   });
 }
+
+// Uma sanfona aberta por vez (reforça o atributo name="sanfona" em navegadores antigos).
+document.querySelectorAll("#sidebar details").forEach(d => d.addEventListener("toggle", () => {
+  if (d.open) document.querySelectorAll("#sidebar details").forEach(o => { if (o !== d) o.open = false; });
+}));
+
+// Pill "Ocultar lidas" (on/off, lembrado no navegador)
+const pillLidas = document.getElementById("ocultar-lidas");
+function aplicarOcultar(ligado) {
+  document.body.classList.toggle("ocultar-lidas", ligado);
+  pillLidas.setAttribute("aria-pressed", ligado);
+  pillLidas.querySelector(".estado").textContent = ligado ? "on" : "off";
+  atualizarTodasLidas();
+}
+function atualizarTodasLidas() {
+  const links = todasLinks(), conf = lerConferidas();
+  document.body.classList.toggle("todas-lidas", links.length > 0 && links.every(a => conf.has(a.dataset.caminho)));
+}
+pillLidas.onclick = () => {
+  const ligado = !document.body.classList.contains("ocultar-lidas");
+  aplicarOcultar(ligado);
+  try { localStorage.setItem("ocultarLidas", ligado ? "1" : "0"); } catch {}
+};
+try { aplicarOcultar(localStorage.getItem("ocultarLidas") === "1"); } catch { aplicarOcultar(false); }
+
+// Home: volta à tela inicial
+document.getElementById("home").onclick = () => {
+  document.getElementById("conteudo").innerHTML = "<em>Selecione um arquivo.</em>";
+  document.getElementById("pills").innerHTML = "";
+  document.getElementById("rolagem").scrollTop = 0;
+  marcarAtivo(null);
+  history.pushState(null, "", location.pathname + location.search);
+};
+
+// Agentes: itens `TÍTULO` do ÍNDICE viram links que rolam até a seção de mesmo título.
+function linksIndice(c) {
+  const sem = t => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/\s+/g, " ").trim();
+  const hs = [...c.querySelectorAll("h1, h2, h3, h4")];
+  const idx = hs.find(h => /^(índice|indice|sumário|sumario)\b/i.test(h.textContent.trim()));
+  if (!idx) return;
+  const rol = document.getElementById("rolagem");
+  for (let e = idx.nextElementSibling; e && !/^H[12]$/.test(e.tagName); e = e.nextElementSibling) {
+    for (const code of e.querySelectorAll("code")) {
+      const chave = sem(code.textContent);
+      const alvo = hs.find(h => h !== idx && sem(h.textContent).startsWith(chave));
+      if (!alvo) continue;
+      const a = document.createElement("a");
+      a.href = "#"; a.className = "ind"; a.title = "Ir para a seção";
+      a.onclick = ev => { ev.preventDefault();
+        rol.scrollTo({ top: rol.scrollTop + alvo.getBoundingClientRect().top - rol.getBoundingClientRect().top, behavior: "smooth" }); };
+      code.replaceWith(a); a.appendChild(code);
+    }
+  }
+}
+
+// Propostas e agentes: md é renderizado; pdf e imagem aparecem na própria página
+async function abrirArquivo(caminho) {
+  const c = document.getElementById("conteudo");
+  const url = caminho.split("/").map(encodeURIComponent).join("/");
+  document.getElementById("pills").innerHTML = "";
+  c.innerHTML = "";
+  if (/\.md$/i.test(caminho)) {
+    c.innerHTML = marked.parse(await (await fetch(url)).text());
+    linksIndice(c);
+  } else {
+    const link = document.createElement("p");
+    const a = document.createElement("a");
+    a.href = url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Abrir em nova aba";
+    link.appendChild(a);
+    const doc = document.createElement(/\.pdf$/i.test(caminho) ? "iframe" : "img");
+    doc.className = "doc"; doc.src = url;
+    c.append(link, doc);
+  }
+  document.getElementById("rolagem").scrollTop = 0;
+  marcarAtivo(caminho);
+  history.replaceState(null, "", "#" + encodeURIComponent(caminho));
+}
+const abrir = caminho => caminho.startsWith("correcoes/") ? mostrar(caminho) : abrirArquivo(caminho);
 
 // Transpõe a tabela "Competência | Nota" para horizontal, logo abaixo do Status.
 function notasHorizontais(c) {
@@ -392,25 +541,47 @@ async function mostrar(caminho) {
   marcarAtivo(caminho);
   const conf = lerConferidas();
   if (!conf.has(caminho)) { conf.add(caminho); salvarConferidas(conf); }
-  document.querySelectorAll("#sidebar a").forEach(a => {
+  todasLinks().forEach(a => {
     if (a.dataset.caminho === caminho) a.parentElement.classList.add("conferida");
   });
   atualizarBadge();
   location.hash = encodeURIComponent(caminho);
 }
 
-async function listar(label, _titulo, idUl) {
+// Nomes dos arquivos da pasta: index.json; sem ele, tenta a listagem do diretório (servidor local).
+async function nomesDe(pasta) {
+  try {
+    const ri = await fetch(pasta + "/index.json");
+    if (ri.ok) return await ri.json();
+  } catch {}
+  const r = await fetch(encodeURIComponent(pasta) + "/");
+  const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+  return [...doc.querySelectorAll("a")].map(a => decodeURIComponent(a.getAttribute("href"))).filter(h => !h.endsWith("/"));
+}
+
+// Propostas e agentes: lista simples, sem subpastas (agentes/bak fica de fora).
+async function listarArquivos(pasta, idUl, ext) {
+  const ul = document.getElementById(idUl);
+  const nomes = (await nomesDe(pasta)).filter(n => ext.test(n) && n !== "index.json").sort();
+  for (const nome of nomes) {
+    const caminho = pasta + "/" + nome;
+    const a = document.createElement("a");
+    a.href = "#" + encodeURIComponent(caminho);
+    a.dataset.caminho = caminho;
+    a.textContent = nome.replace(/\.[^.]+$/, "");
+    a.title = nome;
+    a.onclick = e => { e.preventDefault(); abrirArquivo(caminho); };
+    const li = document.createElement("li");
+    li.appendChild(a);
+    ul.appendChild(li);
+  }
+}
+
+async function listar(idUl) {
   const pasta = "correcoes";
   const ul = document.getElementById(idUl);
-  let nomes;
-  const ri = await fetch(pasta + "/index.json");
-  if (ri.ok) nomes = await ri.json();
-  else {
-    const r = await fetch(encodeURIComponent(pasta) + "/");
-    const doc = new DOMParser().parseFromString(await r.text(), "text/html");
-    nomes = [...doc.querySelectorAll("a")].map(a => decodeURIComponent(a.getAttribute("href")));
-  }
-  const arquivos = nomes.filter(h => h.endsWith(".md") && h.split("_")[1] === label).sort();
+  const nomes = await nomesDe(pasta);
+  const arquivos = nomes.filter(h => h.endsWith(".md") && ["CC", "CS"].includes(h.split("_")[1])).sort();
   const conf = lerConferidas();
   for (const nome of arquivos) {
     const li = document.createElement("li");
@@ -418,6 +589,7 @@ async function listar(label, _titulo, idUl) {
     const caminho = pasta + "/" + nome;
     a.href = "#" + encodeURIComponent(caminho);
     a.dataset.caminho = caminho;
+    a.dataset.label = nome.split("_")[1];
     const m = nome.replace(/\.md$/, "").match(/^(\d+)_([A-Z]+)_(\d{4}-\d{2}-\d{2})_(.+?)_(.+)$/);
     if (m) {
       const [, num, lab, data, aluno, tema] = m;
@@ -434,9 +606,13 @@ async function listar(label, _titulo, idUl) {
   }
 }
 
-Promise.all(pastas.map(p => listar(...p))).then(() => {
+Promise.all([
+  listar("lista-redacoes"),
+  listarArquivos("propostas", "lista-propostas", /\.(pdf|jpe?g|png)$/i),
+  listarArquivos("agentes", "lista-agentes", /\.md$/i),
+]).then(() => {
   atualizarBadge();
-  if (location.hash.length > 1) mostrar(decodeURIComponent(location.hash.slice(1)));
+  if (location.hash.length > 1) abrir(decodeURIComponent(location.hash.slice(1)));
   abrirPendentes(false);
 }).catch(() => {
   document.getElementById("conteudo").textContent =

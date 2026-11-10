@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correções — Mockup</title>
+<style>
+  :root {
+    /* Cinzas médios: nada branco, nada escuro */
+    --bg:        #cbcfd5;   /* fundo da página (escolhido no seletor) */
+    --bg-side:   #b4b9c1;   /* sidebar (escolhido no seletor) */
+    --surface:   #d4d7dc;   /* cards (escolhido no seletor) */
+    --surface-2: color-mix(in srgb, var(--surface) 60%, white);    /* hover */
+    --line:      color-mix(in srgb, var(--bg) 85%, black);
+    --text:      #272c34;
+    --muted:     #4e5560;
+    --accent:    #5a6fd6;
+    --accent-bg: #cfd6f3;
+    --ok:        #3f8f63;
+    --danger:    #c85a5a;
+    --cc:        #5a6fd6;  --cc-bg: #cdd4f2;
+    --cs:        #b27a2c;  --cs-bg: #ecdcc0;
+    --radius:    14px;
+    --shadow:    0 1px 2px rgba(40,48,60,.10), 0 6px 18px rgba(40,48,60,.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    display: flex; overflow: hidden; font-size: 15px;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+
+  /* ---------- Sidebar ---------- */
+  #sidebar {
+    width: 320px; flex: none; height: 100vh; overflow-y: auto;
+    background: var(--bg-side); padding: 1.1rem .9rem; transition: margin-left .25s;
+    border-right: 1px solid var(--line);
+  }
+  body.colapsada #sidebar { margin-left: -320px; }
+  .marca { display: flex; align-items: center; gap: .6rem; margin: 0 .3rem 1rem; }
+  .marca .logo { width: 34px; height: 34px; border-radius: 10px; background: var(--accent); color: #eef0ff;
+                 display: grid; place-items: center; font-weight: 700; box-shadow: var(--shadow); }
+  .marca h1 { font-size: 1.1rem; margin: 0; letter-spacing: -.01em; }
+  .marca small { display: block; color: var(--muted); font-size: .75rem; }
+
+  .busca { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px;
+           padding: .55rem .8rem; font: inherit; color: var(--text); margin-bottom: .7rem; outline: none; }
+  .busca:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .busca::placeholder { color: var(--muted); }
+
+  .chip { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--line); background: var(--surface);
+          border-radius: 999px; padding: .25rem .85rem; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: .9rem; }
+  .chip:hover { background: var(--surface-2); }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #eef0ff; }
+
+  details { margin-bottom: .6rem; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "›"; transition: transform .2s; color: var(--muted); font-size: 1.2rem; }
+  details[open] summary::after { transform: rotate(90deg); }
+  summary .n { margin-left: auto; margin-right: .6rem; font-size: .72rem; font-weight: 700; color: var(--muted);
+               background: var(--bg); border-radius: 999px; padding: 0 .5rem; }
+  details ul { list-style: none; margin: 0; padding: 0 .4rem .5rem; }
+  details li a { display: flex; flex-direction: column; padding: .45rem .6rem; border-radius: 10px; color: var(--text);
+                 text-decoration: none; font-size: .88rem; border-left: 3px solid transparent; }
+  details li a:hover { background: var(--surface-2); }
+  details li a.ativo { background: var(--accent-bg); border-left-color: var(--accent); }
+  .linha1 { display: flex; align-items: baseline; gap: .45rem; }
+  .num { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .nome { font-weight: 600; }
+  .tema { color: var(--muted); font-size: .75rem; }
+  .tag { margin-left: auto; font-size: .62rem; font-weight: 700; padding: .05rem .4rem; border-radius: 6px; letter-spacing: .04em; }
+  .tag.CC { background: var(--cc-bg); color: var(--cc); } .tag.CS { background: var(--cs-bg); color: var(--cs); }
+  li.conferida .linha1::after { content: "✓"; color: var(--ok); font-weight: 700; }
+
+  /* ---------- Área principal ---------- */
+  #area { flex: 1; min-width: 0; height: 100vh; display: flex; flex-direction: column; }
+  #topo { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .7rem 1.1rem;
+          background: color-mix(in srgb, var(--bg) 80%, transparent); backdrop-filter: blur(8px);
+          border-bottom: 1px solid var(--line); }
+  .btn { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: .4rem .9rem; font-size: .86rem; font-weight: 500; }
+  .btn:hover { background: var(--surface-2); }
+  .badge { display: inline-block; margin-left: .4rem; min-width: 1.3rem; padding: 0 .4rem; border-radius: 999px;
+           background: var(--danger); color: #f4eeee; font-size: .72rem; font-weight: 700; text-align: center; }
+  #pills { display: inline-flex; gap: .35rem; margin-left: .4rem; padding-left: .9rem; border-left: 1px solid var(--line); }
+  #pills button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: .15rem .75rem;
+                  font-size: .8rem; font-weight: 600; color: var(--muted); }
+  #pills button:hover { background: var(--accent-bg); color: var(--accent); border-color: var(--accent); }
+
+  #rolagem { flex: 1; overflow-y: auto; }
+  #conteudo { max-width: 920px; margin: 0 auto; padding: 1.8rem 1.5rem 6rem; display: grid; gap: 1.1rem; }
+
+  .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.3rem 1.5rem; }
+  .card h2 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 .8rem; }
+
+  .cabecalho h1 { margin: 0 0 .3rem; font-size: 1.7rem; letter-spacing: -.02em; }
+  .meta { display: flex; flex-wrap: wrap; gap: .5rem; color: var(--muted); font-size: .85rem; }
+  .meta span { background: var(--bg); border-radius: 999px; padding: .1rem .7rem; }
+  .status { display: inline-block; margin-top: .9rem; padding: .2rem .8rem; border-radius: 999px; font-size: .78rem; font-weight: 700;
+            background: var(--cs-bg); color: var(--cs); }
+
+  /* Notas */
+  .total { display: flex; align-items: baseline; gap: .6rem; margin-bottom: 1.1rem; }
+  .total strong { font-size: 2.8rem; letter-spacing: -.03em; line-height: 1; }
+  .total span { color: var(--muted); }
+  .notas { display: grid; grid-template-columns: repeat(5, 1fr); gap: .7rem; }
+  .nota { background: var(--bg); border-radius: 12px; padding: .8rem .9rem; }
+  .nota small { color: var(--muted); font-weight: 600; font-size: .72rem; }
+  .nota b { display: block; font-size: 1.5rem; line-height: 1.2; }
+  .nota .barra { height: 6px; border-radius: 99px; background: var(--line); margin-top: .5rem; overflow: hidden; }
+  .nota .barra i { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+
+  /* Texto */
+  .texto p { margin: 0 0 .9rem; }
+  .texto p .lin { color: var(--muted); font-size: .72rem; font-weight: 700; margin-right: .4rem; }
+  mark.c4 { cursor: help; background: #e3b9cc; color: inherit; border-radius: 4px; padding: 0 .15rem; border-bottom: 2px solid #c0568a; }
+  strong[data-corr] { cursor: help; background: #e5d9a3; border-radius: 4px; padding: 0 .15rem; }
+  blockquote { margin: 0; padding: .7rem 1rem; border-left: 3px solid var(--accent); background: var(--bg); border-radius: 0 10px 10px 0; color: var(--muted); }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: 10px; border: 1px solid var(--line); font-size: .9rem; }
+  th, td { padding: .5rem .8rem; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: var(--bg); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+  td.n, th.n { text-align: center; }
+
+  /* Balão */
+  #balao { position: fixed; z-index: 20; display: none; max-width: 320px; background: #4a515c; color: #eceef1; padding: .5rem .75rem;
+           border-radius: 10px; font-size: .84rem; line-height: 1.35; pointer-events: none; box-shadow: 0 8px 24px rgba(40,48,60,.3); }
+  #balao small { display: block; color: #b9bfc9; margin-bottom: .15rem; }
+
+  /* Modal */
+  #modal { position: fixed; inset: 0; background: rgba(90,98,110,.45); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 10; }
+  #modal.aberto { display: flex; }
+  .caixa { background: var(--surface); border-radius: 18px; width: min(560px, 92vw); max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 24px 60px rgba(40,48,60,.35); overflow: hidden; }
+  .caixa .cab { padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: .6rem; }
+  .caixa h2 { margin: 0; font-size: 1.1rem; }
+  .caixa .contagem { background: var(--accent-bg); color: var(--accent); font-weight: 700; font-size: .8rem; border-radius: 999px; padding: 0 .6rem; }
+  .caixa .lista { overflow-y: auto; padding: .5rem .8rem; }
+  .caixa .lista a { display: flex; gap: .6rem; padding: .5rem .6rem; border-radius: 10px; color: var(--text); text-decoration: none; font-size: .9rem; }
+  .caixa .lista a:hover { background: var(--surface-2); }
+  .caixa .rodape { padding: .8rem 1.4rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; background: var(--bg-side); }
+  .btn.primario { background: var(--accent); border-color: var(--accent); color: #eef0ff; }
+  .btn.primario:hover { background: #4a5ec0; }
+
+
+  /* ---------- Seletor de cores (só no mockup) ---------- */
+  #paleta { position: fixed; right: 16px; bottom: 16px; z-index: 30; width: 330px; max-width: calc(100vw - 32px);
+            background: #eef0f3; color: #272c34; border-radius: 16px; box-shadow: 0 12px 36px rgba(30,36,46,.35); font-size: .8rem; overflow: hidden; }
+  #paleta header { display: flex; justify-content: space-between; align-items: center; padding: .6rem .9rem; font-weight: 700; cursor: pointer; background: #dfe2e7; }
+  #paleta.min .corpo { display: none; }
+  #paleta .corpo { max-height: 70vh; overflow-y: auto; padding: .4rem .9rem .9rem; display: grid; gap: .9rem; }
+  #paleta h3 { margin: .4rem 0 .45rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #666d79; }
+  .grade { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; }
+  .sw { border: 0; background: none; padding: 0; text-align: center; font-size: .66rem; font-family: ui-monospace, monospace; color: #444; }
+  .sw i { display: block; height: 34px; border-radius: 9px; border: 2px solid transparent; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); margin-bottom: .2rem; }
+  .sw[aria-pressed="true"] i { border-color: #5a6fd6; box-shadow: 0 0 0 2px #5a6fd6; }
+  .sw[aria-pressed="true"] { font-weight: 700; color: #000; }
+  .custom { display: flex; gap: .4rem; margin-top: .5rem; align-items: center; }
+  .custom input[type=text] { flex: 1; font: inherit; font-family: ui-monospace, monospace; padding: .3rem .5rem; border: 1px solid #b0b6bf; border-radius: 8px; background: #f6f7f9; }
+  .custom input[type=color] { width: 34px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
+  #copiar { margin-top: .2rem; }
+
+  @media (max-width: 760px) {
+    .notas { grid-template-columns: repeat(2, 1fr); }
+    #sidebar { position: fixed; z-index: 5; }
+  }
+  ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <div class="marca"><div class="logo">C</div><div><h1>Correções</h1><small>Redações ENEM</small></div></div>
+  <input class="busca" type="search" placeholder="Buscar redação…">
+  <button class="chip" id="ocultar" type="button" aria-pressed="false">Ocultar lidas <span id="estado">off</span></button>
+
+  <details open><summary>Redações <span class="n">5</span></summary>
+    <ul id="lista">
+      <li class="conferida"><a href="#" class="ativo"><span class="linha1"><span class="num">0001</span><span class="nome">Clara Manami</span><span class="tag CC">CC</span></span><span class="tema">Acesso ao ensino superior</span></a></li>
+      <li class="conferida"><a href="#"><span class="linha1"><span class="num">0002</span><span class="nome">Arthur de A. Varella França</span><span class="tag CS">CS</span></span><span class="tema">Acesso ao ensino superior</span></a></li>
+      <li><a href="#"><span class="linha1"><span class="num">0003</span><span class="nome">Clara Fedel Moreira</span><span class="tag CS">CS</span></span><span class="tema">Acesso ao ensino superior</span></a></li>
+      <li><a href="#"><span class="linha1"><span class="num">0004</span><span class="nome">Clara Manami</span><span class="tag CS">CS</span></span><span class="tema">Acesso ao ensino superior</span></a></li>
+      <li><a href="#"><span class="linha1"><span class="num">0005</span><span class="nome">Danilo Grasson</span><span class="tag CS">CS</span></span><span class="tema">Acesso ao ensino superior</span></a></li>
+    </ul>
+  </details>
+  <details><summary>Propostas <span class="n">2</span></summary>
+    <ul><li><a href="#"><span class="nome">enem2026.jpeg</span></a></li><li><a href="#"><span class="nome">ENEM Somos [Ensino superior].pdf</span></a></li></ul>
+  </details>
+  <details><summary>Agentes <span class="n">3</span></summary>
+    <ul><li><a href="#"><span class="nome">enem-corretor-unificado.md</span></a></li><li><a href="#"><span class="nome">enem-redator.md</span></a></li><li><a href="#"><span class="nome">agente-candidato-enem.md</span></a></li></ul>
+  </details>
+</aside>
+
+<div id="area">
+  <div id="topo">
+    <button class="btn" id="toggle">☰ Menu</button>
+    <button class="btn">⌂ Home</button>
+    <button class="btn" id="pendentes">Pendentes<span class="badge">3</span></button>
+    <span id="pills"><button>C1</button><button>C2</button><button>C3</button><button>C4</button><button>C5</button></span>
+  </div>
+
+  <div id="rolagem"><main id="conteudo">
+
+    <section class="card cabecalho">
+      <h1>Correção – Clara Manami</h1>
+      <div class="meta"><span>Tema: Desafios para promover o acesso ao ensino superior no Brasil</span><span>2026-11-08</span><span>29 linhas</span></div>
+      <div class="status">PROVISÓRIO · pendente: C2</div>
+    </section>
+
+    <section class="card">
+      <h2>Grade de notas</h2>
+      <div class="total"><strong>720</strong><span>/ 1000 · ou 760 se C2 for confirmada em 200</span></div>
+      <div class="notas">
+        <div class="nota"><small>C1 · Norma culta</small><b>80</b><div class="barra"><i style="width:40%"></i></div></div>
+        <div class="nota"><small>C2 · Tema</small><b>160</b><div class="barra"><i style="width:80%"></i></div></div>
+        <div class="nota"><small>C3 · Projeto</small><b>120</b><div class="barra"><i style="width:60%"></i></div></div>
+        <div class="nota"><small>C4 · Coesão</small><b>160</b><div class="barra"><i style="width:80%"></i></div></div>
+        <div class="nota"><small>C5 · Proposta</small><b>200</b><div class="barra"><i style="width:100%"></i></div></div>
+      </div>
+    </section>
+
+    <section class="card texto">
+      <h2>Transcrição</h2>
+      <blockquote style="margin-bottom:1rem">Observações: redação manuscrita (foto). Rasuras em L10, L16, L19 e L24 não foram descontadas.</blockquote>
+      <p><span class="lin">P1 · L1-8</span>Por muitos anos o sistema educacional brasileiro é considerado inferior internacionalmente, mesmo depois de universalizar o acesso ao ensino fundamental na década de 90. Apesar das criações de políticas como as cotas, o ProUni e o FIES, <strong data-corr="É necessário <b>de</b> mais → É necessário mais (regência)" data-c="C1">é necessário de mais políticas públicas</strong>, visto que quatro a cada cinco brasileiros não tem graduação.</p>
+      <p><span class="lin">P2 · L9-15</span>Em primeiro lugar, a falta de suporte financeiro e incentivos permite que a população mais pobre abandone os estudos <strong data-corr="“à fim da” → “a fim de” (crase indevida)" data-c="C1">à fim da procura</strong> de empregos. <mark class="c4" data-corr="Conectivo desnecessário e mal posicionado, quebra o período." data-c="C4">Mesmo quando, empregos, que onde é obrigatório a graduação, ofereçam salários maiores.</mark></p>
+      <p><span class="lin">P3 · L16-21</span>É também importante destacar o quão necessárias são as cotas, pois mesmo existindo, os brancos ainda têm mais acesso às faculdades que os pretos e pardos.</p>
+    </section>
+
+    <section class="card">
+      <h2>Análise por competência</h2>
+      <table>
+        <tr><th>Competência</th><th class="n">Nota</th><th>Observação</th></tr>
+        <tr><td>C1 · Norma culta</td><td class="n">80</td><td>Desvios de regência e crase recorrentes.</td></tr>
+        <tr><td>C2 · Tema e repertório</td><td class="n">160*</td><td>Repertório legitimado, produtivo em P3.</td></tr>
+        <tr><td>C3 · Projeto de texto</td><td class="n">120</td><td>Ideias previsíveis, pouco desenvolvidas em P2.</td></tr>
+        <tr><td>C4 · Coesão</td><td class="n">160</td><td>Poucos problemas pontuais de conectivos.</td></tr>
+        <tr><td>C5 · Proposta</td><td class="n">200</td><td>Todos os cinco elementos presentes.</td></tr>
+      </table>
+    </section>
+
+  </main></div>
+</div>
+
+<div id="balao"></div>
+<div id="modal"><div class="caixa">
+  <div class="cab"><h2>Redações não conferidas</h2><span class="contagem">3</span></div>
+  <div class="lista">
+    <a href="#"><span class="num">0003</span><span class="nome">Clara Fedel Moreira</span></a>
+    <a href="#"><span class="num">0004</span><span class="nome">Clara Manami</span></a>
+    <a href="#"><span class="num">0005</span><span class="nome">Danilo Grasson</span></a>
+  </div>
+  <div class="rodape"><button class="btn primario">✓ Marcar todas como lidas</button><button class="btn" id="fechar">Fechar</button></div>
+</div></div>
+
+
+<div id="paleta">
+  <header id="paleta-cab"><span>🎨 Escolher cores</span><span id="paleta-seta">▾</span></header>
+  <div class="corpo">
+    <div><h3>Fundo da sidebar</h3><div class="grade" id="g-side"></div>
+      <div class="custom"><input type="color" id="c-side"><input type="text" id="t-side" maxlength="7" spellcheck="false"></div></div>
+    <div><h3>Fundo da página</h3><div class="grade" id="g-bg"></div>
+      <div class="custom"><input type="color" id="c-bg"><input type="text" id="t-bg" maxlength="7" spellcheck="false"></div></div>
+    <div><h3>Cards</h3><div class="grade" id="g-card"></div>
+      <div class="custom"><input type="color" id="c-card"><input type="text" id="t-card" maxlength="7" spellcheck="false"></div></div>
+    <button class="btn" id="copiar">Copiar escolha</button>
+  </div>
+</div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  $("#toggle").onclick = () => document.body.classList.toggle("colapsada");
+  $("#ocultar").onclick = e => {
+    const b = e.currentTarget, on = b.getAttribute("aria-pressed") !== "true";
+    b.setAttribute("aria-pressed", on); $("#estado").textContent = on ? "on" : "off";
+    document.querySelectorAll("#lista li.conferida").forEach(li => li.style.display = on ? "none" : "");
+  };
+  document.querySelectorAll("#lista a").forEach(a => a.onclick = e => {
+    e.preventDefault();
+    document.querySelectorAll("#lista a").forEach(x => x.classList.remove("ativo"));
+    a.classList.add("ativo");
+  });
+  const modal = $("#modal");
+  $("#pendentes").onclick = () => modal.classList.add("aberto");
+  $("#fechar").onclick = () => modal.classList.remove("aberto");
+  modal.onclick = e => { if (e.target === modal) modal.classList.remove("aberto"); };
+  document.addEventListener("keydown", e => { if (e.key === "Escape") modal.classList.remove("aberto"); });
+
+  const balao = $("#balao");
+  document.querySelectorAll("[data-corr]").forEach(el => {
+    el.addEventListener("mousemove", e => {
+      balao.innerHTML = `<small>${el.dataset.c}</small>${el.dataset.corr}`;
+      balao.style.display = "block";
+      balao.style.left = Math.min(e.clientX + 14, innerWidth - 340) + "px";
+      balao.style.top = e.clientY + 18 + "px";
+    });
+    el.addEventListener("mouseleave", () => balao.style.display = "none");
+  });
+
+  /* ---- Seletor de cores ---- */
+  const tons = ["#d4d7dc","#cbcfd5","#c4c8ce","#bcc1c8","#b4b9c1","#abb1ba","#a3a9b3","#9aa1ab","#c9c8c5","#bdbcb8",
+                "#b1b0ac","#a5a4a0","#c3cac9","#b5bebd","#a7b1b0","#c6c3cc","#b8b5c1","#aaa7b6","#9b9fa8","#8f949e"];
+  const alvo = { side: "--bg-side", bg: "--bg", card: "--surface" };
+  function aplicar(chave, hex) {
+    document.documentElement.style.setProperty(alvo[chave], hex);
+    $("#c-"+chave).value = hex; $("#t-"+chave).value = hex;
+    document.querySelectorAll("#g-"+chave+" .sw").forEach(b => b.setAttribute("aria-pressed", b.dataset.hex === hex));
+    try { localStorage.setItem("mock2-"+chave, hex); } catch {}
+  }
+  for (const k of ["side","bg","card"]) {
+    const g = $("#g-"+k);
+    tons.forEach(h => {
+      const b = document.createElement("button");
+      b.className = "sw"; b.dataset.hex = h; b.title = h;
+      b.innerHTML = `<i style="background:${h}"></i>${h}`;
+      b.onclick = () => aplicar(k, h);
+      g.appendChild(b);
+    });
+    $("#c-"+k).oninput = e => aplicar(k, e.target.value);
+    $("#t-"+k).onchange = e => { const v = e.target.value.trim(); if (/^#[0-9a-f]{6}$/i.test(v)) aplicar(k, v.toLowerCase()); };
+    let ini = { side: "#b4b9c1", bg: "#cbcfd5", card: "#d4d7dc" }[k];
+    try { ini = localStorage.getItem("mock2-"+k) || ini; } catch {}
+    aplicar(k, ini);
+  }
+  $("#paleta-cab").onclick = () => { const p = $("#paleta"); p.classList.toggle("min"); $("#paleta-seta").textContent = p.classList.contains("min") ? "▴" : "▾"; };
+  $("#copiar").onclick = () => {
+    const t = `sidebar: ${$("#t-side").value}  |  página: ${$("#t-bg").value}  |  cards: ${$("#t-card").value}`;
+    navigator.clipboard?.writeText(t); $("#copiar").textContent = "Copiado: " + t;
+  };
+</script>
+</body>
+</html>
