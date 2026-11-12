@@ -33,6 +33,11 @@
   #sidebar { width: 320px; flex: none; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line);
              background: var(--bg-side); padding: 1.1rem .9rem; transition: margin-left .25s; }
   body.colapsada #sidebar { margin-left: -320px; }
+  #borda { flex: none; width: 16px; height: 100vh; padding: 0; border: 0; border-right: 1px solid var(--line); border-radius: 0;
+           background: var(--bg-side); color: var(--muted); font-size: 1rem; font-weight: 700; line-height: 1; display: grid; place-items: center;
+           transition: background .15s, color .15s; }
+  #borda:hover, #borda:focus-visible { background: var(--accent); color: #fff; outline: none; }
+  #toggle { display: none; }
   #sidebar .marca { display: flex; align-items: center; gap: .6rem; margin: 0 .3rem 1rem; }
   #sidebar .logo { width: 34px; height: 34px; border-radius: 10px; background: var(--accent); color: #eef0ff;
                    display: grid; place-items: center; font-weight: 700; box-shadow: var(--shadow); }
@@ -86,9 +91,9 @@
   #area { flex: 1; min-width: 0; height: 100vh; display: flex; flex-direction: column; }
   #topo { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .7rem 1.1rem;
           background: color-mix(in srgb, var(--bg) 80%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-  #toggle, #pendentes, #home { margin: 0; align-self: auto; padding: .4rem .9rem; border: 1px solid var(--line); background: var(--surface);
+  #toggle, #pendentes, #home, #imprimir { margin: 0; align-self: auto; padding: .4rem .9rem; border: 1px solid var(--line); background: var(--surface);
                                border-radius: 10px; font-size: .86rem; font-weight: 500; cursor: pointer; }
-  #toggle:hover, #pendentes:hover, #home:hover { background: var(--surface-2); }
+  #toggle:hover, #pendentes:hover, #home:hover, #imprimir:hover { background: var(--surface-2); }
   #pendentes .badge { display: inline-block; margin-left: .4rem; min-width: 1.3rem; padding: 0 .4rem; border-radius: 999px;
                       background: var(--danger); color: #f4eeee; font-size: .72rem; font-weight: 700; text-align: center; }
   #pendentes .badge.zero { background: var(--ok); }
@@ -188,7 +193,7 @@
                  border-radius: 10px; background: var(--surface); font-size: 1rem; }
 
   /* ---------- Celular: menu vira gaveta sobre o conteúdo ---------- */
-  @media (max-width: 760px) {
+  @media screen and (max-width: 760px) {
     html, body, #area { height: 100dvh; }
     #sidebar { position: fixed; top: 0; left: 0; z-index: 15; width: min(320px, 86vw); height: 100dvh; margin-left: 0;
                transform: translateX(-105%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(40,48,60,.35); }
@@ -198,7 +203,9 @@
            opacity: 0; pointer-events: none; transition: opacity .25s; }
     body.menu-aberto #veu { opacity: 1; pointer-events: auto; }
     #topo { padding: .5rem .6rem; gap: .4rem; }
-    #toggle, #pendentes, #home { padding: .35rem .7rem; }
+    #borda { display: none; }
+    #toggle { display: inline-block; }
+    #toggle, #pendentes, #home, #imprimir { padding: .35rem .7rem; }
     #pills { margin-left: 0; padding-left: 0; border-left: 0; flex-wrap: wrap; width: 100%; }
     #conteudo { margin: .6rem .5rem 0; padding: 1rem .9rem 1.2rem; overflow-wrap: break-word; }
     #conteudo h1 { font-size: 1.35rem; }
@@ -223,6 +230,30 @@
     #balao { max-width: calc(100vw - 16px); }
   }
 
+  /* ---------- Impressão: só o conteúdo da correção ---------- */
+  @media print {
+    @page { size: A4 portrait; margin: 15mm 18mm; }
+    html, body, #area { height: auto !important; overflow: visible !important; display: block !important; background: #fff !important; }
+    #sidebar, #borda, #veu, #topo, #balao { display: none !important; }
+    #rolagem { overflow: visible !important; }
+    #rolagem::after { display: none !important; }
+    html, body { width: auto !important; margin: 0 !important; padding: 0 !important; }
+    #area, #rolagem { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+    #conteudo { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: 0; border-radius: 0; background: #fff; overflow-wrap: break-word; }
+    #conteudo * { max-width: 100%; }
+    #conteudo table { width: 100% !important; table-layout: fixed; }
+    #conteudo td, #conteudo th { overflow-wrap: anywhere; }
+    #conteudo pre { white-space: pre-wrap; }
+    #conteudo details.bloco > summary::after { display: none; }
+    #conteudo details.bloco { background: #fff; }
+    #conteudo details.bloco > summary { break-after: avoid; }
+    #conteudo tr, #conteudo blockquote, #conteudo li { break-inside: avoid; }
+    #conteudo table { background: #fff; }
+    #conteudo th { background: #eceef2 !important; }
+    #conteudo h1, #conteudo h2, #conteudo h3 { break-after: avoid; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
   ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
 </style>
 </head>
@@ -236,11 +267,13 @@
   <details name="sanfona"><summary>Propostas</summary><ul id="lista-propostas" class="arq"></ul></details>
   <details name="sanfona"><summary>Agentes</summary><ul id="lista-agentes" class="arq"></ul></details>
 </aside>
+<button id="borda" type="button" title="Recolher/expandir menu" aria-label="Recolher/expandir menu">«</button>
 <div id="veu"></div>
 <div id="area">
   <div id="topo"><button id="toggle" title="Mostrar/ocultar menu">☰ Menu</button>
   <button id="home" title="Voltar ao início">⌂ Home</button>
   <button id="pendentes" title="Redações ainda não conferidas">Pendentes<span class="badge" id="badge"></span></button>
+  <button id="imprimir" title="Imprimir esta correção">🖨 Imprimir</button>
   <span id="pills"></span></div>
   <div id="rolagem"><main id="conteudo"><em>Selecione um arquivo.</em></main></div>
 </div>
@@ -338,6 +371,9 @@ function atualizarBotaoMenu() {
   const b = document.getElementById("toggle");
   b.textContent = aberto ? "✕ Menu" : "☰ Menu";
   b.setAttribute("aria-expanded", String(aberto));
+  const bd = document.getElementById("borda");
+  bd.textContent = aberto ? "«" : "»";
+  bd.title = aberto ? "Recolher menu" : "Expandir menu";
 }
 function alternarMenu() {
   if (telaPequena.matches) document.body.classList.toggle("menu-aberto");
@@ -354,6 +390,16 @@ function fecharMenuCelular() {
 }
 try { if (localStorage.getItem("menuRecolhido") === "1") document.body.classList.add("colapsada"); } catch {}
 document.getElementById("toggle").onclick = alternarMenu;
+document.getElementById("borda").onclick = alternarMenu;
+// Imprimir: abre todos os blocos recolhidos só durante a impressão e restaura depois.
+let abertosAntes = null;
+window.addEventListener("beforeprint", () => {
+  const ds = [...document.querySelectorAll("#conteudo details")];
+  abertosAntes = ds.map(d => [d, d.open]);
+  ds.forEach(d => d.open = true);
+});
+window.addEventListener("afterprint", () => { (abertosAntes || []).forEach(([d, o]) => d.open = o); abertosAntes = null; });
+document.getElementById("imprimir").onclick = () => window.print();
 document.getElementById("veu").onclick = fecharMenuCelular;
 document.getElementById("fechar-menu").onclick = fecharMenuCelular;
 document.addEventListener("keydown", e => { if (e.key === "Escape") fecharMenuCelular(); });
@@ -862,7 +908,7 @@ async function mostrar(caminho) {
 // Nomes dos arquivos da pasta: index.json; sem ele, tenta a listagem do diretório (servidor local).
 async function nomesDe(pasta) {
   try {
-    const ri = await fetch(pasta + "/index.json");
+    const ri = await fetch(pasta + "/index.json", { cache: "no-store" });
     if (ri.ok) return await ri.json();
   } catch {}
   const r = await fetch(encodeURIComponent(pasta) + "/");
@@ -892,6 +938,9 @@ async function listarArquivos(pasta, idUl, ext) {
 async function listar(idLista) {
   const pasta = "correcoes";
   const lista = document.getElementById(idLista);
+  const abertos = new Set([...lista.querySelectorAll("details.tema-grupo[open] > summary .tit")].map(t => t.textContent));
+  const ativo = lista.querySelector("a.ativo")?.dataset.caminho;
+  const primeira = !lista.children.length;
   const grupos = new Map();
   const grupoDe = tema => {
     if (!grupos.has(tema)) {
@@ -907,6 +956,7 @@ async function listar(idLista) {
     return grupos.get(tema);
   };
   const nomes = await nomesDe(pasta);
+  assinaturaCorrecoes = nomes.join("|");
   const arquivos = nomes.filter(h => h.endsWith(".md") && ["CC", "CS"].includes(h.split("_")[1])).sort();
   const conf = lerConferidas();
   for (const nome of arquivos) {
@@ -931,12 +981,26 @@ async function listar(idLista) {
     grupoDe(m ? m[5] : "Outros").querySelector("ul").appendChild(li);
   }
   const ordem = [...grupos.values()].reverse();
+  lista.innerHTML = "";
   for (const d of ordem) {
     d.querySelector(".qtd").textContent = d.querySelectorAll("li").length;
+    if (abertos.has(d.querySelector(".tit").textContent)) d.open = true;
     lista.appendChild(d);
   }
-  if (ordem.length) ordem[0].open = true;
+  if (primeira && ordem.length) ordem[0].open = true;
+  if (ativo) lista.querySelectorAll("a").forEach(a => { if (a.dataset.caminho === ativo) { a.classList.add("ativo"); a.parentElement.classList.add("atual"); } });
 }
+let assinaturaCorrecoes = "";
+// Atualiza a lista sozinha quando surge (ou some) uma correção em correcoes/index.json.
+setInterval(async () => {
+  try {
+    const nomes = await nomesDe("correcoes");
+    if (nomes.join("|") === assinaturaCorrecoes) return;
+    await listar("lista-redacoes");
+    atualizarBadge();
+    filtrarBusca();
+  } catch {}
+}, 4000);
 
 // Busca na sidebar: qualquer termo do nome do arquivo (número, tipo, data, aluno, tema), sem acento e sem diferenciar maiúsculas.
 // Vários termos: todos precisam aparecer (em qualquer ordem).
